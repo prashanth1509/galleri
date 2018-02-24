@@ -81,7 +81,7 @@ export default class Gallery extends Component {
 							return (
 								<li key={index} className={'gallery-list-item'} onClick={(event) => this.listItemClick(event, index)}>
 									<a href={`#${index}`}>
-										<img className={'gallery-list-item-img'} data-src={item['src']} data-title={"Image"}/>
+										<img className={'gallery-list-item-img'} data-src={item['src']} data-title={item['title']}/>
 									</a>
 								</li>
 							);
