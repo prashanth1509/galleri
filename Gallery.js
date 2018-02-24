@@ -290,7 +290,7 @@ class Modal extends Component {
 
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
-				<div className={'modal-controls'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
+				<div className={'modal-controls modal-controls-top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a className={'modal-control-item'} href='#'>{String.fromCharCode(10006)}</a>
 					<figcaption className={'modal-control-item'}>{pages[pageIndex] ? pages[pageIndex].slice(20, 35) : null}</figcaption>
 				</div>
@@ -305,6 +305,9 @@ class Modal extends Component {
 							);
 						})}
 					</div>
+				</div>
+				<div className={'modal-controls modal-control-bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
+					<a className={'modal-control-item'} href='#'>{'more..'}</a>
 				</div>
 			</div>
 		);

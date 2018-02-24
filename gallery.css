@@ -54,7 +54,6 @@ header {
 
 .modal-controls {
 	position: absolute;
-	top: 0;
 	left: 0;
 	width: 100%;
 	z-index: 1;
@@ -62,6 +61,14 @@ header {
 	display: flex;
 	align-items: center;
 	transition: opacity 1s ease;
+}
+
+.modal-control-top {
+	top: 0;
+}
+
+.modal-control-bottom {
+	bottom: 0;
 }
 
 .modal-control-item {
