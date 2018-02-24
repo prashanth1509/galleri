@@ -1,4 +1,6 @@
-import './style';
+import './reset.css';
+import './style.css';
+
 import { Component } from 'preact';
 
 function addPolyfills() {

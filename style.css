@@ -1,12 +1,3 @@
-body, ul, li {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-li {
-	list-style: none;
-}
-
 .img-list-item img {
 	/* Just in case there are inline attributes */
 	width: 100%;
