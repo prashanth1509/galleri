@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 
-import {BookMarker} from './src/Utils';
-import Gallery from './src/Gallery';
+import Gallery from './Gallery';
+import {BookMarker} from './Utils';
 
 export default class App extends Component {
 
@@ -26,6 +26,6 @@ export default class App extends Component {
 	}
 
 	render() {
-		return <Gallery items={this.state.list} currentIndex={this.state.startIndex}/>
+		return <Gallery items={this.state.list} currentIndex={this.state.startIndex} enableKeyboard={true}/>
 	}
 }
