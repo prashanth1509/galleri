@@ -105,22 +105,23 @@ export default class Gallery extends Component {
 
 		let lastIndex = this.state.currentIndex;
 
+		// scroll to corresponding element
+		if (this.baseEl && this.baseEl.childNodes[lastIndex] && this._swipeHappened) {
+			let currentElement = this.baseEl.childNodes[lastIndex];
+			let positionTop = (currentElement.getBoundingClientRect()).top;
+			currentElement.focus();
+			this.base && this.base.scrollTo(0, positionTop);
+			this._swipeHappened = false;
+		}
+
+		// reverse the animation
 		animateFLIP(this.modal.getCurrentModalItem(), this.baseEl.childNodes[lastIndex]);
 
+		// clear state
 		this.setState({currentIndex: -1}, () => {
-
 			BookMarker.clear();
-
-			// scroll to corresponding element in the list
-			if (this.baseEl && this.baseEl.childNodes[lastIndex] && this._swipeHappened) {
-				let currentElement = this.baseEl.childNodes[lastIndex];
-				let positionTop = (currentElement.getBoundingClientRect()).top + window.scrollY;
-				currentElement.focus();
-				this.base && this.base.scrollTo(0, positionTop);
-			}
-			this._swipeHappened = false;
-
 		});
+
 	}
 
 	onModalSwipe(isLeft) {
@@ -286,7 +287,8 @@ class Modal extends Component {
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
 				<div className={'modal-controls'} ref={(el) => {this.controlsEl = el}}>
-					<a className={'modal-close'} href='javascript:void(0)' onClick={onClose}>Close</a>
+					<a className={'modal-control-item'} href='#'>{String.fromCharCode(10006)}</a>
+					<figcaption className={'modal-control-item'}>{'Title'}</figcaption>
 				</div>
 				<div className={'modal-content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
 					<div className={'modal-wrapper'} ref={(el) => {this.baseEl = el}} style={{transform: `${getTranslate3dText(this.getTranslateValue())}`}}>

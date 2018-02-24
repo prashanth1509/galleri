@@ -58,6 +58,15 @@ header {
 	left: 0;
 	width: 100%;
 	z-index: 1;
+	height: 50px;
+	display: flex;
+	align-items: center;
+}
+
+.modal-control-item {
+	text-decoration: none;
+	color: #FFFFFF;
+	padding: 15px;
 }
 
 .modal-wrapper {
