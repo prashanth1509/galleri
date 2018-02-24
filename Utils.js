@@ -46,6 +46,20 @@ function getTranslate2dText(x = 0, y = 0, z = 0) {
 	return `translateX(${x}px) translateY(${y}px)`;
 }
 
+function getZoomFactor() {
+	try {
+		let deviceWidth, landscape = Math.abs(window.orientation) === 90;
+		if (window.screen.width == 320)
+			deviceWidth = landscape ? 480 : 320;
+		else
+			deviceWidth = window.screen[landscape ? "height" : "width"];
+		return deviceWidth / window.innerWidth;
+	}
+	catch (e) {
+		return 1;
+	}
+}
+
 function animateFLIP(firstItem, lastItem) {
 
 	let firstRect = firstItem.getBoundingClientRect();
@@ -196,3 +210,4 @@ export {getTranslate3dText};
 export {getTranslate2dText};
 export {animateFLIP};
 export {lazyLoader};
+export {getZoomFactor};

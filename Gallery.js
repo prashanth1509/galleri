@@ -2,7 +2,7 @@ import './reset.css';
 import './gallery.css';
 
 import {Component} from 'preact';
-import {addAllPolyfills, getTranslate3dText, animateFLIP, BookMarker, lazyLoader} from './Utils';
+import {addAllPolyfills, getTranslate3dText, animateFLIP, BookMarker, lazyLoader, getZoomFactor} from './Utils';
 
 export default class Gallery extends Component {
 
@@ -176,6 +176,10 @@ class Modal extends Component {
 
 	onTouchMove(event) {
 
+		if(event.touches.length > 1 || getZoomFactor() > 1) {
+			return true;
+		}
+
 		event.preventDefault();
 
 		let currentDifference = (event.touches[0].clientX - this.startX);
@@ -195,6 +199,10 @@ class Modal extends Component {
 	}
 
 	onTouchEnd(event) {
+
+		if(event.touches.length > 1 || getZoomFactor() > 1) {
+			return true;
+		}
 
 		event.preventDefault();
 

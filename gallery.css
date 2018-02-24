@@ -63,7 +63,7 @@ header {
 .modal-wrapper {
 	display: flex;
 	flex-direction: row;
-	padding-top: 30px;
+	padding-top: 50px;
 }
 
 .modal-img-wrapper {
