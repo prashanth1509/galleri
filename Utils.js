@@ -58,7 +58,7 @@ function animateFLIP(firstItem, lastItem) {
 		{transform: from},
 		{transform: to}
 	], {
-		duration: 600,
+		duration: 500,
 		easing: 'cubic-bezier(0.2, 0, 0.2, 1)'
 	});
 

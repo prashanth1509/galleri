@@ -1,10 +1,23 @@
 .gallery-container {
+
+	font-family: Arial, Helvetica, sans-serif;
+
 	height: 100vh;
 	overflow-y: scroll;
 
 	/* fix momentum scrolling on iOS */
 	-webkit-overflow-scrolling: touch;
 	will-change: transform;
+
+	background-color: #333333;
+
+}
+
+header {
+	font-size: 2em;
+	padding: 8px 0;
+	text-align: center;
+	color: #ffffff;
 }
 
 .gallery-list-item {
@@ -50,7 +63,7 @@
 .modal-wrapper {
 	display: flex;
 	flex-direction: row;
-	padding-top: 10%;
+	padding-top: 30px;
 }
 
 .modal-img-wrapper {

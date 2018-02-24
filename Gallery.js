@@ -76,7 +76,7 @@ export default class Gallery extends Component {
 		return (
 			<div className={'gallery-container'}>
 				<header>
-					<h3>Photos</h3>
+					<h2>{'Gallery'}</h2>
 				</header>
 				<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
 					{
@@ -105,22 +105,29 @@ export default class Gallery extends Component {
 
 		let lastIndex = this.state.currentIndex;
 
+		animateFLIP(this.modal.getCurrentModalItem(), this.baseEl.childNodes[lastIndex]);
+
 		this.setState({currentIndex: -1}, () => {
 
 			BookMarker.clear();
 
 			// scroll to corresponding element in the list
-			if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
+			if (this.baseEl && this.baseEl.childNodes[lastIndex] && this._swipeHappened) {
 				let currentElement = this.baseEl.childNodes[lastIndex];
 				let positionTop = (currentElement.getBoundingClientRect()).top + window.scrollY;
 				currentElement.focus();
-				window.scrollTo(0, positionTop);
+				this.base && this.base.scrollTo(0, positionTop);
 			}
+			this._swipeHappened = false;
 
 		});
 	}
 
 	onModalSwipe(isLeft) {
+
+		// to avoid auto scroll without any swipes
+		this._swipeHappened = true;
+
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
 			BookMarker.set(this.state.currentIndex);
 		});
