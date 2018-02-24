@@ -82,7 +82,7 @@ function lazyLoader(images, options) {
 
 	let {imageLoadedClass, errorImageSrc, observerConfig} = Object.assign({}, {
 		imageLoadedClass: 'lazy-loaded',
-		errorImageSrc: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAzElEQVQ4T6WT3QkCMRAG5xALEGsQQdA61FrEXsRaROvQBwVrEAsQUb6QhDXkh8N9OrK7k71M0vFndI3+NfABjqW6GmAIXDxgAbxykBpgC+x8k773fQBj4A6MfNMTmACPFFKaQLttgJDXOWhNk/xEDjADzsAgAbyBOXC1hBxAJ770RXYCLZ2AVQ0gbQdTkAKUUk3UaicI2qYNwA2IWi3Aamvdz6g1AFJtAZD7BeWi1lAQtJUsSWMaTqsAVltrdJt3WgWw2voAnNbWa2wCv4TxJ/FpqOy9AAAAAElFTkSuQmCC',
+		errorImageSrc: 'assets/close.png',
 		observerConfig: {
 			threshold: 0.5
 		}

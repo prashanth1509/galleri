@@ -1,4 +1,4 @@
-.gallery-container {
+.container {
 
 	font-family: Arial, Helvetica, sans-serif;
 
@@ -20,9 +20,27 @@ header {
 }
 
 .gallery-list-item {
-	background-color: #EEEEEE;
+	background-color: #CCCCCC;
 	margin-bottom: 1px;
 	min-height: 100px;
+}
+
+.shimmer {
+	background: linear-gradient(-45deg, #EEEEEE, #CCCCCC);
+	background-size: 400% 400%;
+	animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
 }
 
 .gallery-list-item-img {
@@ -77,6 +95,7 @@ header {
 	color: #FFFFFF;
 	padding: 15px;
 	display: inline-block;
+	text-overflow: ellipsis;
 }
 
 .modal-control-item .icon {

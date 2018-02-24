@@ -74,17 +74,14 @@ export default class Gallery extends Component {
 		}
 
 		return (
-			<div className={'gallery-container'}>
-				<header>
-					<h2>{'Gallery'}</h2>
-				</header>
+			<div>
 				<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
 					{
 						items.map((item, index) => {
 							return (
 								<li key={index} className={'gallery-list-item'} onClick={(event) => this.listItemClick(event, index)}>
 									<a href={`#${index}`}>
-										<img className={'gallery-list-item-img'} data-src={item} data-title={"Image"}/>
+										<img className={'gallery-list-item-img'} data-src={item['src']} data-title={"Image"}/>
 									</a>
 								</li>
 							);
@@ -93,7 +90,7 @@ export default class Gallery extends Component {
 				</ul>
 				<Modal ref={(el) => {this.modal = el}}
 					   show={currentIndex > -1}
-					   pages={pages}
+					   pages={currentIndex > -1 ? pages : []}
 					   pageIndex={current}
 					   onModalSwipe={this.onModalSwipe}
 					   onClose={this.onModalClose}/>
@@ -292,7 +289,7 @@ class Modal extends Component {
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
 				<div className={'modal-controls modal-controls-top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a className={'modal-control-item'} href='#'><img className={'icon'} src={'assets/close.png'} alt="close"/></a>
-					<figcaption className={'modal-control-item'}>{pages[pageIndex] ? pages[pageIndex].slice(20, 35) : null}</figcaption>
+					<figcaption className={'modal-control-item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
 				</div>
 				<div className={'modal-content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
 					<div className={'modal-wrapper'} ref={(el) => {this.baseEl = el}} style={{transform: `${getTranslate3dText(this.getTranslateValue())}`}}>
@@ -300,7 +297,7 @@ class Modal extends Component {
 							let isCurrent = (index === pageIndex);
 							return (
 								<div className={'modal-img-wrapper'}>
-									<img ref={(el) => {if (isCurrent) {this.currentItem = el;}}} src={item} className={'modal-img'}/>
+									<img ref={(el) => {if (isCurrent) {this.currentItem = el;}}} src={item['src']} className={'modal-img'}/>
 								</div>
 							);
 						})}
