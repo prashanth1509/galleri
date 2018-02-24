@@ -74,7 +74,7 @@ export default class Gallery extends Component {
 		}
 
 		return (
-			<div>
+			<div className={'gallery-container'}>
 				<header>
 					<h3>Photos</h3>
 				</header>

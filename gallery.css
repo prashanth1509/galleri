@@ -1,3 +1,12 @@
+.gallery-container {
+	height: 100vh;
+	overflow-y: scroll;
+
+	/* fix momentum scrolling on iOS */
+	-webkit-overflow-scrolling: touch;
+	will-change: transform;
+}
+
 .gallery-list-item {
 	background-color: #EEEEEE;
 	margin-bottom: 1px;
