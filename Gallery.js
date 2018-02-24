@@ -286,12 +286,12 @@ class Modal extends Component {
 
 	render() {
 
-		let {pages, show, pageIndex, onClose} = this.props;
+		let {pages, show, pageIndex} = this.props;
 
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
 				<div className={'modal-controls modal-controls-top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a className={'modal-control-item'} href='#'>{String.fromCharCode(10006)}</a>
+					<a className={'modal-control-item'} href='#'><img className={'icon'} src={'assets/close.png'} alt="close"/></a>
 					<figcaption className={'modal-control-item'}>{pages[pageIndex] ? pages[pageIndex].slice(20, 35) : null}</figcaption>
 				</div>
 				<div className={'modal-content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
@@ -307,7 +307,8 @@ class Modal extends Component {
 					</div>
 				</div>
 				<div className={'modal-controls modal-control-bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a className={'modal-control-item'} href='#'>{'more..'}</a>
+					<a className={'modal-control-item'} href='javascript:void(0)'><img className={'icon'} src={'assets/comment.png'} alt="comment"/></a>
+					<a className={'modal-control-item'} href='javascript:void(0)'><img className={'icon'} src={'assets/plus.png'} alt="plus"/></a>
 				</div>
 			</div>
 		);

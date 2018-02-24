@@ -9,7 +9,7 @@
 	-webkit-overflow-scrolling: touch;
 	will-change: transform;
 
-	background-color: #333333;
+	background-color: #EEEEEE;
 
 }
 
@@ -17,7 +17,6 @@ header {
 	font-size: 2em;
 	padding: 8px 0;
 	text-align: center;
-	color: #ffffff;
 }
 
 .gallery-list-item {
@@ -61,6 +60,7 @@ header {
 	display: flex;
 	align-items: center;
 	transition: opacity 1s ease;
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-control-top {
@@ -69,6 +69,7 @@ header {
 
 .modal-control-bottom {
 	bottom: 0;
+	justify-content: space-around;
 }
 
 .modal-control-item {
@@ -78,8 +79,8 @@ header {
 	display: inline-block;
 }
 
-.modal-control-item:visited {
-	color: #FFFFFF;
+.modal-control-item .icon {
+	max-width: 24px;
 }
 
 .modal-wrapper {
@@ -97,7 +98,7 @@ header {
 .modal-img {
 	transform-origin: top left;
 	max-width: 100%;
-	max-height: 90vh;
+	max-height: 80vh;
 }
 
 .column-grid {
