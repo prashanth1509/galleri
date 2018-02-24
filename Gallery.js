@@ -207,13 +207,17 @@ class Modal extends Component {
 
 		event.preventDefault();
 
-		const SWIPE_THRESHOLD = 40;
+		const SWIPE_THRESHOLD_PERCENT = 40;
+
 		let maxWidth = this.baseEl.offsetWidth;
-		let shouldMove = Math.abs((this.diff / maxWidth) * 100) > SWIPE_THRESHOLD;
+		let shouldMove = Math.abs((this.diff / maxWidth) * 100) > SWIPE_THRESHOLD_PERCENT;
 		let isFingerDirectionLeft = this.diff < 0;
 
 		if (shouldMove) {
 			this.currentX = this.currentX + (isFingerDirectionLeft ? -maxWidth : maxWidth);
+		}
+		else {
+			this.setState((currentState) => ({showControl: !currentState.showControl}));
 		}
 
 		this.createTransition(this.currentX, () => {
@@ -286,9 +290,9 @@ class Modal extends Component {
 
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
-				<div className={'modal-controls'} ref={(el) => {this.controlsEl = el}}>
+				<div className={'modal-controls'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a className={'modal-control-item'} href='#'>{String.fromCharCode(10006)}</a>
-					<figcaption className={'modal-control-item'}>{'Title'}</figcaption>
+					<figcaption className={'modal-control-item'}>{pages[pageIndex] ? pages[pageIndex].slice(20, 35) : null}</figcaption>
 				</div>
 				<div className={'modal-content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
 					<div className={'modal-wrapper'} ref={(el) => {this.baseEl = el}} style={{transform: `${getTranslate3dText(this.getTranslateValue())}`}}>

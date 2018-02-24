@@ -61,12 +61,18 @@ header {
 	height: 50px;
 	display: flex;
 	align-items: center;
+	transition: opacity 1s ease;
 }
 
 .modal-control-item {
 	text-decoration: none;
 	color: #FFFFFF;
 	padding: 15px;
+	display: inline-block;
+}
+
+.modal-control-item:visited {
+	color: #FFFFFF;
 }
 
 .modal-wrapper {
