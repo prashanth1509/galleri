@@ -241,7 +241,7 @@ class Modal extends Component {
 
 		const SWIPE_THRESHOLD_PERCENT = 40;
 
-		let maxWidth = this.baseEl.offsetWidth;
+		let maxWidth = this.baseEl.offsetWidth / Math.max(this.props.pages.length, 1);
 		let shouldMove = Math.abs((this.diff / maxWidth) * 100) > SWIPE_THRESHOLD_PERCENT;
 		let isFingerDirectionLeft = this.diff < 0;
 
@@ -327,7 +327,7 @@ class Modal extends Component {
 					<figcaption className={'modal-control-item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
 				</div>
 				<div className={'modal-content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
-					<div className={'modal-wrapper'} ref={(el) => {this.baseEl = el}} style={{transform: `${getTranslate3dText(this.getTranslateValue())}`}}>
+					<div className={'modal-wrapper'} ref={(el) => {this.baseEl = el}} style={{width: `${pages.length * 100}%`, transform: `${getTranslate3dText(this.getTranslateValue())}`}}>
 						{(pages || []).map((item, index) => {
 							let isCurrent = (index === pageIndex);
 							return (

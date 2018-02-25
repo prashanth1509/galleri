@@ -27,20 +27,6 @@ header {
 
 .shimmer {
 	background: linear-gradient(-45deg, #EEEEEE, #CCCCCC);
-	background-size: 400% 400%;
-	animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
 }
 
 .gallery-list-item-img {
@@ -106,11 +92,11 @@ header {
 .modal-wrapper {
 	display: flex;
 	flex-direction: row;
-	padding-top: 50px;
+	align-items: center;
+	height: 90vh;
 }
 
 .modal-img-wrapper {
-	flex: 0 0 auto;
 	width: 100%;
 	text-align: center;
 }
