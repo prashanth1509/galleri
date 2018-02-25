@@ -96,6 +96,7 @@ header {
 	padding: 15px;
 	display: inline-block;
 	text-overflow: ellipsis;
+	font-size: 20px;
 }
 
 .modal-control-item .icon {

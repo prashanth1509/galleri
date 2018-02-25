@@ -1,4 +1,4 @@
-function addAllPolyfills() {
+function addPolyfills() {
 
 	// web animations support
 	if(typeof document.body.animate === "undefined") {
@@ -6,6 +6,10 @@ function addAllPolyfills() {
 		script.src = "//cdn.jsdelivr.net/web-animations/latest/web-animations.min.js";
 		document.body.appendChild(script);
 	}
+
+}
+
+function gridify() {
 
 	// css columns support
 	// We could also use CSS.supports, but its still buggy.
@@ -65,7 +69,11 @@ function animateFLIP(firstItem, lastItem) {
 	let firstRect = firstItem.getBoundingClientRect();
 	let lastRect = lastItem.getBoundingClientRect();
 
-	let from = `${getTranslate2dText(firstRect.left - lastRect.left, firstRect.top - lastRect.top)} scale(${firstRect.width / (lastRect.width || 1)})`;
+	// Still painting and user had clicked. Don't animate but just show stuff.
+	if(!lastRect.width)
+		return;
+
+	let from = `${getTranslate2dText(firstRect.left - lastRect.left, firstRect.top - lastRect.top)} scale(${firstRect.width / lastRect.width})`;
 	let to = `${getTranslate2dText()} scale(1)`;
 
 	lastItem.animate([
@@ -204,10 +212,11 @@ function lazyLoader(images, options) {
 }
 
 
-export {addAllPolyfills};
+export {addPolyfills};
 export {BookMarker};
 export {getTranslate3dText};
 export {getTranslate2dText};
 export {animateFLIP};
 export {lazyLoader};
 export {getZoomFactor};
+export {gridify};

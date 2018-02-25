@@ -2,7 +2,17 @@ import './reset.css';
 import './gallery.css';
 
 import {Component} from 'preact';
-import {addAllPolyfills, getTranslate3dText, animateFLIP, BookMarker, lazyLoader, getZoomFactor} from './Utils';
+import {gridify, getTranslate3dText, animateFLIP, BookMarker, lazyLoader, getZoomFactor} from './Utils';
+
+class Loader extends Component {
+	render() {
+		return (
+			<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
+				{('   '.split('').map(() => <li className={'gallery-list-item shimmer'}></li>))}
+			</ul>
+		);
+	}
+}
 
 export default class Gallery extends Component {
 
@@ -20,21 +30,30 @@ export default class Gallery extends Component {
 	}
 
 	componentDidMount() {
+		this.preSetup();
+	}
 
-		// Support web animations and css columns, flex
-		addAllPolyfills();
+	componentWillReceiveProps(newProps) {
 
-		// Listen for hash changes
-		// we are supporting IE 9+ (no attachEvent)
-		window.addEventListener('hashchange', this.onHashChange);
+		if(this.state.items.length !== newProps.items.length) {
+			this.setState({items: newProps.items, currentIndex: newProps.currentIndex}, () => {
+				this.preSetup();
+			});
+		}
+	}
+
+	preSetup() {
+		// create grids
+		gridify();
 
 		// lazyloading
 		lazyLoader(document.querySelectorAll('.gallery-list-item-img'), {imageLoadedClass: 'gallery-list-item-img-loaded'});
 	}
 
-	componentWillReceiveProps(newProps) {
-		// lazyloading
-		lazyLoader(document.querySelectorAll('.gallery-list-item-img'), {imageLoadedClass: 'gallery-list-item-img-loaded'});
+	componentWillMount() {
+		// Listen for hash changes
+		// we are supporting IE 9+ (no attachEvent)
+		window.addEventListener('hashchange', this.onHashChange);
 	}
 
 	componentWillUnmount() {
@@ -64,37 +83,43 @@ export default class Gallery extends Component {
 
 		// pagination items for modal
 		let pages = [], current = 0;
-		if (currentIndex > 0) {
-			pages.push(items[currentIndex - 1]);
-			current = 1;
-		}
-		pages.push(items[currentIndex]);
-		if (currentIndex < items.length - 1) {
-			pages.push(items[currentIndex + 1]);
+
+		if(items.length) {
+			if (currentIndex > 0) {
+				pages.push(items[currentIndex - 1]);
+				current = 1;
+			}
+			pages.push(items[currentIndex]);
+			if (currentIndex < items.length - 1) {
+				pages.push(items[currentIndex + 1]);
+			}
 		}
 
 		return (
-			<div>
-				<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
-					{
-						items.map((item, index) => {
-							return (
-								<li key={index} className={'gallery-list-item'} onClick={(event) => this.listItemClick(event, index)}>
-									<a href={`#${index}`}>
-										<img className={'gallery-list-item-img'} data-src={item['src']} data-title={item['title']}/>
-									</a>
-								</li>
-							);
-						})
-					}
-				</ul>
+			<main className={'container'}>
+				<header><h2>{'Gallery'}</h2></header>
+				{
+					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
+						{
+							items.map((item, index) => {
+								return (
+									<li key={index} className={'gallery-list-item'} onClick={(event) => this.listItemClick(event, index)}>
+										<a href={`#${index}`}>
+											<img className={'gallery-list-item-img'} data-src={item['src']} data-title={item['title']}/>
+										</a>
+									</li>
+								);
+							})
+						}
+					</ul> : <Loader/>
+				}
 				<Modal ref={(el) => {this.modal = el}}
 					   show={currentIndex > -1}
 					   pages={currentIndex > -1 ? pages : []}
 					   pageIndex={current}
 					   onModalSwipe={this.onModalSwipe}
 					   onClose={this.onModalClose}/>
-			</div>
+			</main>
 		);
 	}
 
