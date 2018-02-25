@@ -11,6 +11,12 @@ function addPolyfills() {
 
 function gridify() {
 
+	// Safari has ugly bottom bar
+	if(!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
+		document.querySelector('.container').style['paddingBottom'] = '30px';
+		document.querySelector('.modal-wrapper').style['paddingBottom'] = '30px';
+	}
+
 	// css columns support
 	// We could also use CSS.supports, but its still buggy.
 	if(document.body.style.columns !== undefined) {
