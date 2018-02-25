@@ -89,7 +89,8 @@ export default class Gallery extends Component {
 				pages.push(items[currentIndex - 1]);
 				current = 1;
 			}
-			pages.push(items[currentIndex]);
+			if(currentIndex > -1)
+				pages.push(items[currentIndex]);
 			if (currentIndex < items.length - 1) {
 				pages.push(items[currentIndex + 1]);
 			}
@@ -116,7 +117,7 @@ export default class Gallery extends Component {
 				}
 				<Modal ref={(el) => {this.modal = el}}
 					   show={currentIndex > -1}
-					   pages={currentIndex > -1 ? pages : []}
+					   pages={pages}
 					   pageIndex={current}
 					   onModalSwipe={this.onModalSwipe}
 					   onClose={this.onModalClose}/>
@@ -129,12 +130,11 @@ export default class Gallery extends Component {
 		let lastIndex = this.state.currentIndex;
 
 		// scroll to corresponding element
-		if (this.baseEl && this.baseEl.childNodes[lastIndex] /*&& this._swipeHappened*/) {
+		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
 			let positionTop = (currentElement.getBoundingClientRect()).top;
 			currentElement.focus();
-			this.base && this.base.scrollTo(0, positionTop);
-			this._swipeHappened = false;
+			this.base && this.base.scrollTo(0, Math.max(0, positionTop - 100));
 		}
 
 		// reverse the animation
@@ -148,9 +148,6 @@ export default class Gallery extends Component {
 	}
 
 	onModalSwipe(isLeft) {
-
-		// to avoid auto scroll without any swipes
-		this._swipeHappened = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
 			BookMarker.set(this.state.currentIndex);
