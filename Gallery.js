@@ -189,6 +189,10 @@ class Modal extends Component {
 
 	onTouchStart(event) {
 
+		if(event.touches.length > 1 || getZoomFactor() > 1) {
+			return true;
+		}
+
 		event.preventDefault();
 
 		this.startX = event.touches[0].clientX;
