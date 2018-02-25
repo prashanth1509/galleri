@@ -130,11 +130,12 @@ export default class Gallery extends Component {
 		let lastIndex = this.state.currentIndex;
 
 		// scroll to corresponding element
-		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
+		if (this.baseEl && this.baseEl.childNodes[lastIndex] && this._swiped) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
 			let positionTop = (currentElement.getBoundingClientRect()).top;
 			currentElement.focus();
-			this.base && this.base.scrollTo(0, Math.max(0, positionTop - 100));
+			this.base && this.base.scrollTo(0, Math.max(0, positionTop + this.base.scrollTop));
+			this._swiped = false;
 		}
 
 		// reverse the animation
@@ -148,6 +149,9 @@ export default class Gallery extends Component {
 	}
 
 	onModalSwipe(isLeft) {
+
+		// track if swipe happened to scroll content later
+		this._swiped = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
 			BookMarker.set(this.state.currentIndex);
