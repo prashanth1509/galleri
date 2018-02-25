@@ -2,7 +2,7 @@ import './reset.css';
 import './gallery.css';
 
 import {Component} from 'preact';
-import {gridify, getTranslate3dText, animateFLIP, BookMarker, lazyLoader, getZoomFactor} from './Utils';
+import {gridify, getTranslate3dText, _preload, animateFLIP, BookMarker, lazyLoader, getZoomFactor} from './Utils';
 
 class Loader extends Component {
 	render() {
@@ -93,6 +93,7 @@ export default class Gallery extends Component {
 			if (currentIndex < items.length - 1) {
 				pages.push(items[currentIndex + 1]);
 			}
+			_preload(pages);
 		}
 
 		return (
@@ -128,7 +129,7 @@ export default class Gallery extends Component {
 		let lastIndex = this.state.currentIndex;
 
 		// scroll to corresponding element
-		if (this.baseEl && this.baseEl.childNodes[lastIndex] && this._swipeHappened) {
+		if (this.baseEl && this.baseEl.childNodes[lastIndex] /*&& this._swipeHappened*/) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
 			let positionTop = (currentElement.getBoundingClientRect()).top;
 			currentElement.focus();
@@ -371,4 +372,5 @@ class Modal extends Component {
 		this.currentX = offset;
 		return this.currentX;
 	}
+
 }

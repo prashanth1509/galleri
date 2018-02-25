@@ -50,6 +50,14 @@ function getTranslate2dText(x = 0, y = 0, z = 0) {
 	return `translateX(${x}px) translateY(${y}px)`;
 }
 
+// fix preload issue
+function _preload(items) {
+	let image = document.createElement('img');
+	for(let i = 0; i < items.length; i++) {
+		image.src = items[i].src;
+	}
+}
+
 function getZoomFactor() {
 	try {
 		let deviceWidth, landscape = Math.abs(window.orientation) === 90;
@@ -220,3 +228,4 @@ export {animateFLIP};
 export {lazyLoader};
 export {getZoomFactor};
 export {gridify};
+export {_preload};
