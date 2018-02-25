@@ -9,7 +9,6 @@
     <% if (htmlWebpackPlugin.options.manifest.theme_color) { %>
     <meta name="theme-color" content="<%= htmlWebpackPlugin.options.manifest.theme_color %>"/>
     <% } %>
-    <link rel="shortcut icon" href="favicon.ico"/>
     <% for (var chunk of webpack.chunks) { %>
     <% if (chunk.names.length === 1 && chunk.names[0] === 'polyfills') continue; %>
     <% for (var file of chunk.files) { %>
