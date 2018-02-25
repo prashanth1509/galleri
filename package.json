@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production/public",
+    "build": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production/public && echo 'DONE FORGET TO UPDATE SERVICE WORKER'",
     "deploy": "cd production && firebase deploy",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
