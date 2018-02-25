@@ -1,15 +1,15 @@
 {
   "images" : [
-    {"src": "/assets/misc/dc-1.jpg", "title": "Servers"},
-    {"src": "/assets/misc/color-2.jpg", "title": "Peace"},
-    {"src": "/assets/misc/pic-4.jpg", "title": "Babies"},
-    {"src": "/assets/misc/color-1.jpg", "title": "Playful"},
-    {"src": "/assets/misc/dc-3.jpg", "title": "Pipes"},
-    {"src": "/assets/misc/pic-1.jpg", "title": "Gym"},
-    {"src": "/assets/misc/color-3.jpg", "title": "Unleashed"},
-    {"src": "/assets/misc/pic-2.jpg", "title": "Reception"},
-    {"src": "/assets/misc/pic-3.jpg", "title": "Slider"},
-    {"src": "/assets/misc/color-4.jpg", "title": "Hymn for the weekend"},
-    {"src": "/assets/misc/dc-2.jpg", "title": "Servers Ariel"}
+    {"src": "https://picsum.photos/531/700/", "title": "Greens greens"},
+    {"src": "https://picsum.photos/600/466/", "title": "The Bridge..."},
+    {"src": "https://picsum.photos/700/531/", "title": "Love for the coffee"},
+    {"src": "https://picsum.photos/600/500/", "title": "The silent shores"},
+    {"src": "https://picsum.photos/500/600/", "title": "Snow white beauty"},
+    {"src": "https://picsum.photos/700/500/", "title": "The garage"},
+    {"src": "https://picsum.photos/600/450/", "title": "Hungry goat"},
+    {"src": "https://picsum.photos/200/440/", "title": "Mystic river"},
+    {"src": "https://picsum.photos/500/250/", "title": "Sunshines..."},
+    {"src": "https://picsum.photos/400/500/", "title": "The commuter"},
+    {"src": "https://picsum.photos/450/300/", "title": "Surfing time.."}
   ]
 }

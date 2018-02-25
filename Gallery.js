@@ -179,6 +179,10 @@ class Modal extends Component {
 		// keyboard handlers
 		this.onKeyDown = this.onKeyDown.bind(this);
 
+		this.state = {
+			showControl: true
+		};
+
 	}
 
 	componentDidUpdate() {
