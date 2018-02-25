@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --service-worker --no-prerender --dest=production/public && cd production && firebase deploy && cd ../",
+    "build": "preact build --service-worker --no-prerender --dest=production/public && cp shell/index.html production/public/index.html",
+    "deploy": "cd production && firebase deploy",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
     "lint": "eslint src"

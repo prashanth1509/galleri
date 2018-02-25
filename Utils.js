@@ -65,7 +65,7 @@ function animateFLIP(firstItem, lastItem) {
 	let firstRect = firstItem.getBoundingClientRect();
 	let lastRect = lastItem.getBoundingClientRect();
 
-	let from = `${getTranslate2dText(firstRect.left - lastRect.left, firstRect.top - lastRect.top)} scale(${firstRect.width / lastRect.width})`;
+	let from = `${getTranslate2dText(firstRect.left - lastRect.left, firstRect.top - lastRect.top)} scale(${firstRect.width / (lastRect.width || 1)})`;
 	let to = `${getTranslate2dText()} scale(1)`;
 
 	lastItem.animate([
