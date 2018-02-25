@@ -18,7 +18,7 @@ export default class App extends Component {
 
 	componentDidMount() {
 
-		// fetch list of images
+		// list of images to be loaded
 		fetch('/assets/images-v1.json').then((response) => response.json()).then((data) => {
 			this.setState({
 				list: data.images
