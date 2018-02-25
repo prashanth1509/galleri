@@ -99,7 +99,7 @@ export default class Gallery extends Component {
 
 		return (
 			<main className={'container'}>
-				<header><h2>{'Gallery'}</h2></header>
+				<header className={'header'}><h2>{'Gallery'}</h2></header>
 				{
 					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
 						{
