@@ -4,25 +4,18 @@
 	background-color: #333333;
 }
 
-.container.offline {
+.container--offline {
 	background-color: #CCCCCC;
 }
 
-.header {
-	font-size: 2em;
-	color: #FFFFFF;
-	padding: 10px 0;
-	text-align: center;
-}
-
-.gallery-list-item {
+.gallery__item {
 	display: inline-block;
 	vertical-align: middle;
 	opacity: 1;
 	transition: opacity 1s ease;
 }
 
-.gallery-list-item.loading {
+.gallery__item--loading {
 	width: 49%;
 	height: 200px;
 	background-color: #555555;
@@ -39,7 +32,7 @@
 	background: #333333;
 }
 
-.modal-controls {
+.modal__control {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -57,17 +50,17 @@
 	background-color: rgba(51, 51, 51, 0.5);
 }
 
-.modal-control-top {
+.modal__control--top {
 	top: 0;
 }
 
-.modal-control-bottom {
+.modal__control--bottom {
 	bottom: 0;
 	-ms-flex-pack: distribute;
 	justify-content: space-around;
 }
 
-.modal-control-item {
+.control__item {
 	text-decoration: none;
 	color: #FFFFFF;
 	padding: 15px;
@@ -77,11 +70,11 @@
 	font-size: 20px;
 }
 
-.modal-control-item .icon {
+.control__item--icon {
 	max-width: 24px;
 }
 
-.modal-wrapper {
+.content__wrapper {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -96,15 +89,22 @@
 	padding-bottom: 30px;
 }
 
-.modal-img-wrapper {
+.content__img__wrapper {
 	width: 100%;
 	text-align: center;
 }
 
-.modal-img {
+.content__img {
 	-webkit-transform-origin: top left;
 	-ms-transform-origin: top left;
 	transform-origin: top left;
 	max-width: 100%;
 	max-height: 80vh;
+}
+
+.header {
+	font-size: 2em;
+	color: #FFFFFF;
+	padding: 10px 0;
+	text-align: center;
 }

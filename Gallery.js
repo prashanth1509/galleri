@@ -11,8 +11,8 @@ const DELAY_MODAL = window.navigator.userAgent.toLowerCase().indexOf('crios') > 
 class Loader extends Component {
 	render() {
 		return (
-			<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container'}>
-				{('   '.split('').map(() => <li className={'gallery-list-item loading'} />))}
+			<ul ref={(el) => {this.baseEl = el}} className={'gallery'}>
+				{('   '.split('').map(() => <li className={'gallery__item gallery__item--loading'} />))}
 			</ul>
 		);
 	}
@@ -29,7 +29,6 @@ export default class Gallery extends Component {
 
 		this.state = {
 			items: props.items,
-			// not a reliable way of detection though
 			online: (typeof navigator.onLine === 'boolean') ? navigator.onLine : true,
 			currentIndex: props.currentIndex
 		};
@@ -50,8 +49,6 @@ export default class Gallery extends Component {
 	}
 
 	componentWillMount() {
-		// Listen for hash changes
-		// we are supporting IE 9+ (no attachEvent)
 		window.addEventListener('hashchange', this.onHashChange);
 		window.addEventListener('resize', this.onResize);
 		window.addEventListener('online',  this.onNetworkChange);
@@ -187,14 +184,14 @@ export default class Gallery extends Component {
 		}
 
 		return (
-			<main className={`container ${online === false ? 'offline' : ''}`}>
+			<main className={`container ${online === false ? 'container--offline' : ''}`}>
 				<header className={'header'}><h2>{'Gallery'}</h2></header>
 				{
-					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container'}>
+					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery'}>
 						{
 							items.map((item, index) => {
 								return (
-									<li tabIndex={0} key={index} className={`gallery-list-item ${!item['width'] && 'loading'}`} onClick={(event) => this.listItemClick(event, index)}>
+									<li tabIndex={0} key={index} className={`gallery__item ${!item['width'] && 'gallery__item--loading'}`} onClick={(event) => this.listItemClick(event, index)}>
 										<img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/>
 									</li>
 								);
@@ -429,25 +426,25 @@ class Modal extends Component {
 
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
-				<div className={'modal-controls modal-controls-top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a className={'modal-control-item'} href='#'><img className={'icon'} src={'assets/close.png'} alt="close"/></a>
-					<figcaption className={'modal-control-item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
+				<div className={'modal__control modal__control--top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
+					<a className={'control__item'} href='#'><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
+					<figcaption className={'control__item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
 				</div>
-				<div className={'modal-content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
-					<div className={'modal-wrapper'} ref={(el) => {this.baseEl = el}} style={{width: `${pages.length * 100}%`, transform: `${getTranslate3dText(this.getTranslateValue())}`}}>
+				<div className={'modal__content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
+					<div className={'content__wrapper'} ref={(el) => {this.baseEl = el}} style={{width: `${pages.length * 100}%`, transform: `${getTranslate3dText(this.getTranslateValue())}`}}>
 						{(pages || []).map((item, index) => {
 							let isCurrent = (index === pageIndex);
 							return (
-								<div className={'modal-img-wrapper'}>
-									<img ref={(el) => {if (isCurrent) {this.currentItem = el;}}} src={item['src']} className={'modal-img'}/>
+								<div className={'content__img__wrapper'}>
+									<img ref={(el) => {if (isCurrent) {this.currentItem = el;}}} src={item['src']} className={'content__img'}/>
 								</div>
 							);
 						})}
 					</div>
 				</div>
-				<div className={'modal-controls modal-control-bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a className={'modal-control-item'} href='javascript:void(0)'><img className={'icon'} src={'assets/comment.png'} alt="comment"/></a>
-					<a className={'modal-control-item'} href='javascript:void(0)'><img className={'icon'} src={'assets/plus.png'} alt="plus"/></a>
+				<div className={'modal__control modal__control--bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
+					<a className={'control__item'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/comment.png'} alt="comment"/></a>
+					<a className={'control__item'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/plus.png'} alt="plus"/></a>
 				</div>
 			</div>
 		);
