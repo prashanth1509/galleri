@@ -135,6 +135,8 @@ export default class Gallery extends Component {
 	}
 
 	listItemClick(event, index) {
+		this._lastScrollPos = window.scrollY;
+
 		this.setState({currentIndex: index}, () => {
 			animateFLIP(event.target, this.modal.getCurrentModalItem());
 			BookMarker.set(this.state.currentIndex);
@@ -193,10 +195,10 @@ export default class Gallery extends Component {
 		// scroll to corresponding element
 		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
-			let positionTop = (currentElement.getBoundingClientRect()).top;
+			let positionTop = this._swiped ? (currentElement.getBoundingClientRect()).top + this.base.scrollTop : (this._lastScrollPos || 0);
 			currentElement.focus();
-			// window.scrollTo && window.scrollTo(0, Math.max(0, positionTop + window.scrollY));
-			this.base && this.base.scrollTo(0, Math.max(0, positionTop + this.base.scrollTop));
+			window.scrollTo && window.scrollTo(0, positionTop);
+			this._swiped = false;
 		}
 
 		// reverse the animation
@@ -210,6 +212,8 @@ export default class Gallery extends Component {
 	}
 
 	onModalSwipe(isLeft) {
+
+		this._swiped = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
 			BookMarker.set(this.state.currentIndex);
