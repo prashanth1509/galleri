@@ -3,6 +3,7 @@ import './gallery.css';
 
 import {Component} from 'preact';
 import {getTranslate3dText, animateFLIP, BookMarker, getZoomFactor, linearPartition} from './Utils';
+import Shake from './shake';
 
 const FALLBACK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 const DELAY_MODAL = window.navigator.userAgent.toLowerCase().indexOf('crios') > -1;
@@ -247,6 +248,14 @@ export default class Gallery extends Component {
 
 class Modal extends Component {
 
+	enableShakeDetection() {
+		this._shakeListener = new Shake({
+			threshold: 5,
+			timeout: 500
+		});
+		this._shakeListener.start();
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -270,12 +279,25 @@ class Modal extends Component {
 			showControl: true
 		};
 
+		//shake handlers
+		this.enableShakeDetection();
+		this.onShake = this.onShake.bind(this);
+
 	}
 
 	componentDidUpdate() {
 		if (this.props.show) {
 			this.focus();
 		}
+	}
+
+	componentWillMount() {
+		window.addEventListener('shake', this.onShake, false);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('shake', this.onShake, false);
+		this._shakeListener.stop();
 	}
 
 	onTouchStart(event) {
@@ -303,7 +325,7 @@ class Modal extends Component {
 		let currentDifference = (event.touches[0].clientX - this.startX);
 		let {pages, pageIndex} = this.props;
 
-		// lock swipe for ends
+		// lock swipe for corners
 		if ((currentDifference > 0 && pageIndex < 1) || (currentDifference < 0 && pageIndex >= pages.length - 1)) {
 			return;
 		}
@@ -457,6 +479,18 @@ class Modal extends Component {
 
 		this.currentX = offset;
 		return this.currentX;
+	}
+
+	onShake() {
+		let {show, pageIndex, pages, onModalSwipe} = this.props;
+
+		// todo handle direction of shake
+		if(show && pageIndex < pages.length - 1) {
+			this.currentX = this.currentX - this.baseEl.offsetWidth;
+			this.createTransition(this.currentX, () => {
+				onModalSwipe && onModalSwipe(false);
+			});
+		}
 	}
 
 }
