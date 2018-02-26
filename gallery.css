@@ -4,6 +4,10 @@
 	background-color: #333333;
 }
 
+.container.offline {
+	background-color: #CCCCCC;
+}
+
 .header {
 	font-size: 2em;
 	color: #FFFFFF;

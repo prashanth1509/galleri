@@ -24,12 +24,17 @@ export default class Gallery extends Component {
 
 		this.state = {
 			items: props.items,
+			// not a reliable way of detection though
+			online: (typeof navigator.onLine === 'boolean') ? navigator.onLine : true,
 			currentIndex: props.currentIndex
 		};
 
 		this.onModalClose = this.onModalClose.bind(this);
 		this.onModalSwipe = this.onModalSwipe.bind(this);
 		this.onHashChange = this.onHashChange.bind(this);
+		this.onNetworkOnline = this.onNetworkOnline.bind(this);
+		this.onNetworkOffline = this.onNetworkOffline.bind(this);
+
 		this.onResize = this.onResize.bind(this);
 	}
 
@@ -155,9 +160,17 @@ export default class Gallery extends Component {
 		});
 	}
 
+	onNetworkOffline() {
+		this.setState({online: false});
+	}
+
+	onNetworkOnline() {
+		this.setState({online: true});
+	}
+
 	render() {
 
-		let {items, currentIndex} = this.state;
+		let {items, currentIndex, online} = this.state;
 
 		// pagination items for modal
 		let pages = [], current = 0;
@@ -175,7 +188,7 @@ export default class Gallery extends Component {
 		}
 
 		return (
-			<main className={'container'}>
+			<main className={`container ${online === false ? 'offline' : ''}`}>
 				<header className={'header'}><h2>{'Gallery'}</h2></header>
 				{
 					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container'}>
