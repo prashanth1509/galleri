@@ -49,12 +49,14 @@ export default class Gallery extends Component {
 		this.partitionItems({firstLoad: true});
 	}
 
-	partitionItems({idealWidth = window.innerWidth, idealHeight = parseInt(window.innerHeight / 4)}) {
+	partitionItems(firstLoad = false, idealWidth = window.innerWidth, idealHeight = parseInt(window.innerHeight / 4)) {
 
 		if(this.state.items.length < 1)
 			return;
 
-		let currentItems = this.state.items;
+		let currentItems = (this._origList || this.state.items);
+		this._origList = JSON.parse(JSON.stringify(currentItems));
+		currentItems = firstLoad ? currentItems.slice(0, 8) : currentItems;
 
 		let imageObjectPopulator = currentItems.map((item, index) => {
 			return new Promise((resolve, reject) => {
@@ -98,7 +100,10 @@ export default class Gallery extends Component {
 				correspondingIndex = correspondingIndex + currentRow.length;
 			});
 
-			this.setState({items: imageObjectList}, () => {});
+			this.setState({items: imageObjectList}, () => {
+				if(firstLoad)
+					window.requestAnimationFrame(() => this.partitionItems());
+			});
 
 		});
 
