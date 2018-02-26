@@ -29,6 +29,7 @@ export default class Gallery extends Component {
 		this.onModalClose = this.onModalClose.bind(this);
 		this.onModalSwipe = this.onModalSwipe.bind(this);
 		this.onHashChange = this.onHashChange.bind(this);
+		this.partitionItems = this.partitionItems.bind(this);
 	}
 
 	componentDidMount() {
@@ -106,10 +107,12 @@ export default class Gallery extends Component {
 		// Listen for hash changes
 		// we are supporting IE 9+ (no attachEvent)
 		window.addEventListener('hashchange', this.onHashChange);
+		window.addEventListener('resize', this.partitionItems);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('hashchange', this.onHashChange);
+		window.removeEventListener('resize', this.partitionItems);
 	}
 
 	onHashChange() {
@@ -146,7 +149,6 @@ export default class Gallery extends Component {
 			if (currentIndex < items.length - 1) {
 				pages.push(items[currentIndex + 1]);
 			}
-			_preload(pages);
 		}
 
 		return (
