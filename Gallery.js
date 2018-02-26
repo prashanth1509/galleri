@@ -5,6 +5,7 @@ import {Component} from 'preact';
 import {getTranslate3dText, animateFLIP, BookMarker, getZoomFactor, linearPartition} from './Utils';
 
 const FALLBACK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const DELAY_MODAL = window.navigator.userAgent.toLowerCase().indexOf('crios') > -1;
 
 class Loader extends Component {
 	render() {
@@ -139,7 +140,13 @@ export default class Gallery extends Component {
 
 		this.setState({currentIndex: index}, () => {
 			animateFLIP(event.target, this.modal.getCurrentModalItem());
-			BookMarker.set(this.state.currentIndex);
+
+			// fix chrome address bar popping up immediately
+			if( DELAY_MODAL && this._lastScrollPos > 0 )
+				setTimeout(() => BookMarker.set(this.state.currentIndex), 500);
+			else
+				BookMarker.set(this.state.currentIndex);
+
 		});
 	}
 
