@@ -11,13 +11,17 @@ class Loader extends Component {
 	render() {
 		return (
 			<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container'}>
-				{('   '.split('').map(() => <li className={'gallery-list-item loading'}></li>))}
+				{('   '.split('').map(() => <li className={'gallery-list-item loading'} />))}
 			</ul>
 		);
 	}
 }
 
 export default class Gallery extends Component {
+
+	preSetup() {
+		this.partitionItems({firstLoad: true});
+	}
 
 	constructor(props) {
 		super(props);
@@ -34,12 +38,7 @@ export default class Gallery extends Component {
 		this.onHashChange = this.onHashChange.bind(this);
 		this.onNetworkOnline = this.onNetworkOnline.bind(this);
 		this.onNetworkOffline = this.onNetworkOffline.bind(this);
-
 		this.onResize = this.onResize.bind(this);
-	}
-
-	componentDidMount() {
-		this.preSetup();
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -50,8 +49,20 @@ export default class Gallery extends Component {
 		}
 	}
 
-	preSetup() {
-		this.partitionItems({firstLoad: true});
+	componentWillMount() {
+		// Listen for hash changes
+		// we are supporting IE 9+ (no attachEvent)
+		window.addEventListener('hashchange', this.onHashChange);
+		window.addEventListener('resize', this.onResize);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('hashchange', this.onHashChange);
+		window.removeEventListener('resize', this.onResize);
+	}
+
+	componentDidMount() {
+		this.preSetup();
 	}
 
 	partitionItems(firstLoad = false, idealWidth = window.innerWidth, idealHeight = parseInt(window.innerHeight / 4)) {
@@ -112,18 +123,6 @@ export default class Gallery extends Component {
 
 		});
 
-	}
-
-	componentWillMount() {
-		// Listen for hash changes
-		// we are supporting IE 9+ (no attachEvent)
-		window.addEventListener('hashchange', this.onHashChange);
-		window.addEventListener('resize', this.onResize);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('hashchange', this.onHashChange);
-		window.removeEventListener('resize', this.onResize);
 	}
 
 	onHashChange() {
