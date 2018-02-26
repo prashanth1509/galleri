@@ -241,7 +241,7 @@ export default class Modal extends Component {
 
 		// todo handle direction of shake
 		if(show && pageIndex < pages.length - 1) {
-			this.currentX = this.currentX - (this.baseEl.offsetWidth / pages);
+			this.currentX = this.currentX - (this.baseEl.offsetWidth / pages.length);
 			this.createTransition(this.currentX, () => {
 				onModalSwipe && onModalSwipe(false);
 			});
