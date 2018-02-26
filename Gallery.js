@@ -29,7 +29,7 @@ export default class Gallery extends Component {
 		this.onModalClose = this.onModalClose.bind(this);
 		this.onModalSwipe = this.onModalSwipe.bind(this);
 		this.onHashChange = this.onHashChange.bind(this);
-		this.partitionItems = this.partitionItems.bind(this);
+		this.onResize = this.onResize.bind(this);
 	}
 
 	componentDidMount() {
@@ -107,12 +107,12 @@ export default class Gallery extends Component {
 		// Listen for hash changes
 		// we are supporting IE 9+ (no attachEvent)
 		window.addEventListener('hashchange', this.onHashChange);
-		window.addEventListener('resize', this.partitionItems);
+		window.addEventListener('resize', this.onResize);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('hashchange', this.onHashChange);
-		window.removeEventListener('resize', this.partitionItems);
+		window.removeEventListener('resize', this.onResize);
 	}
 
 	onHashChange() {
@@ -124,6 +124,14 @@ export default class Gallery extends Component {
 			else
 				this.setState({currentIndex: changedIndex});
 		}
+	}
+
+	onResize() {
+		// chrome toggles address bar now and then and triggers resize often.
+		if ( Math.abs( parseInt(this._lastHeight || 0) - (window.innerHeight / 4) ) < 100 )
+			return;
+		this._lastHeight = window.innerHeight / 4;
+		this.partitionItems();
 	}
 
 	listItemClick(event, index) {
@@ -183,13 +191,12 @@ export default class Gallery extends Component {
 		let lastIndex = this.state.currentIndex;
 
 		// scroll to corresponding element
-		if (this.baseEl && this.baseEl.childNodes[lastIndex] && this._swiped) {
+		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
 			let positionTop = (currentElement.getBoundingClientRect()).top;
 			currentElement.focus();
-			// Ideally, this.base && this.base.scrollTo(0, Math.max(0, positionTop + this.base.scrollTop));
-			window.scrollTo && window.scrollTo(0, Math.max(0, positionTop + window.scrollY));
-			this._swiped = false;
+			// window.scrollTo && window.scrollTo(0, Math.max(0, positionTop + window.scrollY));
+			this.base && this.base.scrollTo(0, Math.max(0, positionTop + this.base.scrollTop));
 		}
 
 		// reverse the animation
@@ -203,9 +210,6 @@ export default class Gallery extends Component {
 	}
 
 	onModalSwipe(isLeft) {
-
-		// track if swipe happened to scroll content later
-		this._swiped = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
 			BookMarker.set(this.state.currentIndex);
