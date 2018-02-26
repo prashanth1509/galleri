@@ -2,13 +2,15 @@ import './reset.css';
 import './gallery.css';
 
 import {Component} from 'preact';
-import {gridify, getTranslate3dText, _preload, animateFLIP, BookMarker, lazyLoader, getZoomFactor} from './Utils';
+import {getTranslate3dText, animateFLIP, BookMarker, getZoomFactor, linearPartition} from './Utils';
+
+const FALLBACK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 class Loader extends Component {
 	render() {
 		return (
-			<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
-				{('   '.split('').map(() => <li className={'gallery-list-item shimmer'}></li>))}
+			<ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container'}>
+				{('   '.split('').map(() => <li className={'gallery-list-item loading'}></li>))}
 			</ul>
 		);
 	}
@@ -34,7 +36,6 @@ export default class Gallery extends Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-
 		if(this.state.items.length !== newProps.items.length) {
 			this.setState({items: newProps.items, currentIndex: newProps.currentIndex}, () => {
 				this.preSetup();
@@ -43,11 +44,62 @@ export default class Gallery extends Component {
 	}
 
 	preSetup() {
-		// create grids
-		gridify();
+		this.partitionItems({firstLoad: true});
+	}
 
-		// lazyloading
-		lazyLoader(document.querySelectorAll('.gallery-list-item-img'), {imageLoadedClass: 'gallery-list-item-img-loaded'});
+	partitionItems({idealWidth = window.innerWidth, idealHeight = parseInt(window.innerHeight / 4)}) {
+
+		if(this.state.items.length < 1)
+			return;
+
+		let currentItems = this.state.items;
+
+		let imageObjectPopulator = currentItems.map((item, index) => {
+			return new Promise((resolve, reject) => {
+				if(index >= 0) {
+					let image = new Image();
+					image.src = item.src;
+					image.onload = function () {
+						resolve(Object.assign(item, {width: image.width, height: image.height}));
+					};
+					image.onerror = function () {
+						resolve(Object.assign(item, {src: FALLBACK_IMAGE, width: 1, height: 1}));
+					};
+				}
+			});
+		});
+
+		Promise.all(imageObjectPopulator).then((imageObjectList) => {
+			let totalWidth = 0;
+
+			let widthSequence = imageObjectList.map((obj) => {
+				let value = parseInt(obj.width * (idealHeight / obj.height));
+				// also calculate total width on the way
+				totalWidth+=value;
+				return value;
+			});
+
+			let totalRowsRequired = Math.round(totalWidth / idealWidth);
+
+			let partitions = linearPartition(widthSequence, totalRowsRequired), correspondingIndex = 0;
+
+			partitions.forEach((currentRow) => {
+				let correspondingObjects = imageObjectList.slice(correspondingIndex, correspondingIndex + currentRow.length);
+				let totalParts = currentRow.reduce((acc, v) => acc + v);
+				currentRow.forEach((value, index) => {
+					let ratio = value / totalParts;
+					let assignedWidth = parseInt(idealWidth * ratio);
+					let currentAspectRation = correspondingObjects[index].width / correspondingObjects[index].height;
+					let assignedHeight = parseInt(assignedWidth / currentAspectRation);
+					correspondingObjects[index] = Object.assign(correspondingObjects[index], {width: assignedWidth, height: assignedHeight});
+				});
+				correspondingIndex = correspondingIndex + currentRow.length;
+			});
+
+			this.setState({items: imageObjectList}, () => {});
+
+		});
+
 	}
 
 	componentWillMount() {
@@ -101,13 +153,13 @@ export default class Gallery extends Component {
 			<main className={'container'}>
 				<header className={'header'}><h2>{'Gallery'}</h2></header>
 				{
-					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container gridify'}>
+					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery-list-container'}>
 						{
 							items.map((item, index) => {
 								return (
-									<li key={index} className={'gallery-list-item'} onClick={(event) => this.listItemClick(event, index)}>
+									<li key={index} className={`gallery-list-item ${!item['width'] && 'loading'}`} onClick={(event) => this.listItemClick(event, index)}>
 										<a href={`#${index}`}>
-											<img className={'gallery-list-item-img'} data-src={item['src']} data-title={item['title']}/>
+											<img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/>
 										</a>
 									</li>
 								);
