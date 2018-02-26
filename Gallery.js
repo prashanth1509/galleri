@@ -20,7 +20,7 @@ class Loader extends Component {
 export default class Gallery extends Component {
 
 	preSetup() {
-		this.partitionItems({firstLoad: true});
+		this.partitionItems(true);
 	}
 
 	constructor(props) {
@@ -36,8 +36,7 @@ export default class Gallery extends Component {
 		this.onModalClose = this.onModalClose.bind(this);
 		this.onModalSwipe = this.onModalSwipe.bind(this);
 		this.onHashChange = this.onHashChange.bind(this);
-		this.onNetworkOnline = this.onNetworkOnline.bind(this);
-		this.onNetworkOffline = this.onNetworkOffline.bind(this);
+		this.onNetworkChange = this.onNetworkChange.bind(this);
 		this.onResize = this.onResize.bind(this);
 	}
 
@@ -54,11 +53,15 @@ export default class Gallery extends Component {
 		// we are supporting IE 9+ (no attachEvent)
 		window.addEventListener('hashchange', this.onHashChange);
 		window.addEventListener('resize', this.onResize);
+		window.addEventListener('online',  this.onNetworkChange);
+		window.addEventListener('offline', this.onNetworkChange);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('hashchange', this.onHashChange);
 		window.removeEventListener('resize', this.onResize);
+		window.removeEventListener('online',  this.onNetworkChange);
+		window.removeEventListener('offline', this.onNetworkChange);
 	}
 
 	componentDidMount() {
@@ -159,12 +162,8 @@ export default class Gallery extends Component {
 		});
 	}
 
-	onNetworkOffline() {
-		this.setState({online: false});
-	}
-
-	onNetworkOnline() {
-		this.setState({online: true});
+	onNetworkChange() {
+		this.setState({online: window.navigator.onLine});
 	}
 
 	render() {
