@@ -1,6 +1,6 @@
 function addPolyfills() {
 
-	// web animations support
+	// web animations
 	if(typeof document.body.animate === "undefined") {
 		let script = document.createElement('script');
 		script.src = "//cdn.jsdelivr.net/web-animations/latest/web-animations.min.js";
@@ -32,6 +32,16 @@ function addPolyfills() {
 				clearTimeout(id);
 			};
 	}());
+
+
+	// promises
+	(function () {
+		if(!window.Promise) {
+			let script = document.createElement('script');
+			script.src = "//cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.js";
+			document.body.appendChild(script);
+		}
+	})();
 
 }
 
