@@ -130,8 +130,8 @@ export default class Modal extends Component {
 
 		event.preventDefault();
 
-		let maxWidth = this.baseEl.offsetWidth;
 		let {pages, pageIndex} = this.props;
+		let maxWidth = this.baseEl.offsetWidth / pages.length;
 
 		switch (event.keyCode) {
 			case KEYS.LEFT:
