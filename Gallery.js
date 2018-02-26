@@ -129,6 +129,7 @@ export default class Gallery extends Component {
 	listItemClick(event, index) {
 		this.setState({currentIndex: index}, () => {
 			animateFLIP(event.target, this.modal.getCurrentModalItem());
+			BookMarker.set(this.state.currentIndex);
 		});
 	}
 
@@ -159,10 +160,8 @@ export default class Gallery extends Component {
 						{
 							items.map((item, index) => {
 								return (
-									<li key={index} className={`gallery-list-item ${!item['width'] && 'loading'}`} onClick={(event) => this.listItemClick(event, index)}>
-										<a href={`#${index}`}>
-											<img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/>
-										</a>
+									<li tabIndex={0} key={index} className={`gallery-list-item ${!item['width'] && 'loading'}`} onClick={(event) => this.listItemClick(event, index)}>
+										<img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/>
 									</li>
 								);
 							})
@@ -188,7 +187,8 @@ export default class Gallery extends Component {
 			let currentElement = this.baseEl.childNodes[lastIndex];
 			let positionTop = (currentElement.getBoundingClientRect()).top;
 			currentElement.focus();
-			this.base && this.base.scrollTo(0, Math.max(0, positionTop + this.base.scrollTop));
+			// Ideally, this.base && this.base.scrollTo(0, Math.max(0, positionTop + this.base.scrollTop));
+			window.scrollTo && window.scrollTo(0, Math.max(0, positionTop + window.scrollY));
 			this._swiped = false;
 		}
 
