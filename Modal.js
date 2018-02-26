@@ -184,6 +184,7 @@ export default class Modal extends Component {
 
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
+				<Tips/>
 				<div className={'modal__control modal__control--top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a className={'control__item'} href='#'><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
 					<figcaption className={'control__item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
@@ -248,4 +249,34 @@ export default class Modal extends Component {
 		}
 	}
 
+}
+
+class Tips extends Component {
+	constructor(props) {
+		super(props);
+		this.hideTips = this.hideTips.bind(this);
+		this.state = {show: (window.localStorage ? (!localStorage.getItem('hideHelp')) : false)};
+	}
+
+	render() {
+		if(this.state.show === false)
+			return null;
+		return (
+			<div className={'tips'}>
+				<ul>
+					<li>{'TAP on top-left to "close"'}</li>
+					<li className={'tips--center'}>{'SWIPE to "switch" images'}</li>
+					<li className={'tips--center'}>{'TAP on the image to "toggle" controls'}</li>
+					<li><button className={'tips--close'} onClick={this.hideTips}>{'GOT IT'}</button></li>
+				</ul>
+			</div>
+		);
+	}
+
+	hideTips() {
+		if(window.localStorage) {
+			window.localStorage.setItem('hideHelp', true);
+			this.setState({show: false});
+		}
+	}
 }
