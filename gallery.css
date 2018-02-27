@@ -30,6 +30,11 @@
 	height: 100%;
 	width: 100%;
 	background: #333333;
+	display: none;
+}
+
+.modal--visible {
+	display: block;
 }
 
 .modal__control {
@@ -48,6 +53,7 @@
 	-o-transition: opacity 1s ease;
 	transition: opacity 1s ease;
 	background-color: rgba(51, 51, 51, 0.5);
+	opacity: 0;
 }
 
 .modal__control--top {
@@ -58,6 +64,10 @@
 	bottom: 0;
 	-ms-flex-pack: distribute;
 	justify-content: space-around;
+}
+
+.modal__control--visible {
+	opacity: 1;
 }
 
 .control__item {
