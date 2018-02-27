@@ -49,21 +49,16 @@ const BookMarker = {
 	historySupported: !!(window.history && window.history.pushState),
 	get(fallback = -1) {
 		if(this.historySupported) {
-			if(window.location.pathname) {
-				return parseInt(window.location.pathname.slice(1)) || fallback;
-			}
-			else {
-				return parseInt(window.location.href.split("/").pop()) || fallback;
-			}
+			return parseInt(window.location.href.split("id=").pop()) || fallback;
 		}
 		return parseInt(window.location.hash.slice(1) || fallback);
 	},
 	set(value = "", replace = false) {
 		if(this.historySupported) {
 			if(replace)
-				history.replaceState(null, null, value);
+				history.replaceState(null, null, '?id='+value);
 			else
-				history.pushState(null, null, value);
+				history.pushState(null, null, '?id='+value);
 		}
 		else {
 			window.location.hash = value;
