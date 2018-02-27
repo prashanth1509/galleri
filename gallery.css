@@ -40,6 +40,10 @@
 	display: none;
 }
 
+.container--offline .modal {
+	background-color: #CCCCCC;
+}
+
 .modal--visible {
 	display: block;
 }
