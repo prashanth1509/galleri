@@ -1,3 +1,6 @@
+/**
+ * Adds few polyfills (animations, requestAnimationFrame, promises)
+ */
 function addPolyfills() {
 
 	// web animations
@@ -45,6 +48,9 @@ function addPolyfills() {
 
 }
 
+/**
+ * Helps manage history, navigation
+ */
 const BookMarker = {
 	historySupported: !!(window.history && window.history.pushState),
 	get(fallback = -1) {
@@ -81,14 +87,32 @@ const BookMarker = {
 	}
 };
 
+/**
+ * Returns css translate 3d string
+ * @param x
+ * @param y
+ * @param z
+ * @returns {string}
+ */
 function getTranslate3dText(x = 0, y = 0, z = 0) {
 	return `translate3d(${x}px, ${y}px, ${z}px)`;
 }
 
+/**
+ * Returns css translate string
+ * @param x
+ * @param y
+ * @param z
+ * @returns {string}
+ */
 function getTranslate2dText(x = 0, y = 0, z = 0) {
 	return `translateX(${x}px) translateY(${y}px)`;
 }
 
+/**
+ * Returns the current scale of webpage
+ * @returns {number}
+ */
 function getZoomFactor() {
 	try {
 		let deviceWidth, landscape = Math.abs(window.orientation) === 90;
@@ -103,6 +127,12 @@ function getZoomFactor() {
 	}
 }
 
+/**
+ * Animates position of element
+ * Inspiration from https://aerotwist.com/blog/flip-your-animations/
+ * @param firstItem
+ * @param lastItem
+ */
 function animateFLIP(firstItem, lastItem) {
 
 	let firstRect = firstItem.getBoundingClientRect();
@@ -125,6 +155,14 @@ function animateFLIP(firstItem, lastItem) {
 
 }
 
+/**
+ * Lazy load images (only when they are in viewport)
+ * Depends on intersection observer
+ * --todo Use scroll based loader as fallback for intersection observer
+ * @param images
+ * @param options
+ * @returns {{disconnect: disconnect}}
+ */
 function lazyLoader(images, options) {
 
 	let {imageLoadedClass, errorImageSrc, observerConfig} = Object.assign({}, {
@@ -140,7 +178,6 @@ function lazyLoader(images, options) {
 
 	// If we don't have support for intersection observer, loads the images immediately
 	if (!('IntersectionObserver' in window)) {
-		// todo or use scroll based loader?
 		loadImagesImmediately(images);
 	} else {
 		observer = new IntersectionObserver(onIntersection, observerConfig);
