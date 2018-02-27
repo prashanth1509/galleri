@@ -185,8 +185,8 @@ export default class Modal extends Component {
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
 				<div className={'modal__control modal__control--top'} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a ref={(el) => {this._firstCtrl = el}} className={'control__item'} href='#'><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
-					<figcaption className={'control__item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
+					<a ref={(el) => {this._firstCtrl = el}} className={'control__item'} href='#' aria-label={'go back to list'}><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
+					<figcaption tabIndex="0" className={'control__item'} aria-label={'currently viewing ' + (pages[pageIndex] ? pages[pageIndex]['title'] : 'picture')}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
 				</div>
 				<div className={'modal__content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
 					<div className={'content__wrapper'} ref={(el) => {this.baseEl = el}} style={{width: `${pages.length * 100}%`, transform: `${getTranslate3dText(this.getTranslateValue())}`}}>
@@ -202,8 +202,8 @@ export default class Modal extends Component {
 				</div>
 				<Tips ref={(el) => (this._tipsEl = el)}/>
 				<div className={'modal__control modal__control--bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a className={'control__item'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/comment.png'} alt="comment"/></a>
-					<a className={'control__item'} href='javascript:void(0)' ref={(el) => {this._lastCtrl = el}}><img className={'control__item--icon'} src={'assets/plus.png'} alt="plus"/></a>
+					<a className={'control__item'} aria-label={'add comment'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/comment.png'} alt="comment"/></a>
+					<a className={'control__item'} aria-label={'add plus-one'} href='javascript:void(0)' ref={(el) => {this._lastCtrl = el}}><img className={'control__item--icon'} src={'assets/plus.png'} alt="plus"/></a>
 				</div>
 			</div>
 		);
@@ -262,12 +262,12 @@ class Tips extends Component {
 		if(this.state.show === false)
 			return null;
 		return (
-			<div className={'tips'} tabIndex="0">
+			<div className={'tips'}>
 				<ul>
 					<li>{'TAP on top-left edge to "close" slide'}</li>
 					<li className={'tips--center'}>{'SWIPE/SHAKE to "change" images'}</li>
 					<li className={'tips--center'}>{'TAP on the image to "toggle" controls'}</li>
-					<li><button className={'tips--close'} onClick={this.hideTips}>{'CLOSE'}</button></li>
+					<li><button tabIndex="0" aria-label={'close tips'} className={'tips--close'} onClick={this.hideTips}>{'CLOSE'}</button></li>
 				</ul>
 			</div>
 		);
