@@ -3,15 +3,23 @@ import './gallery.css';
 import {Component} from 'preact';
 import Loader from './Loader';
 import Modal from './Modal';
-import {animateFLIP, BookMarker, linearPartition} from './Utils';
+import {animateFLIP, BookMarker, lazyLoader, linearPartition} from './Utils';
 
 const FALLBACK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 const DELAY_MODAL = window.navigator.userAgent.toLowerCase().indexOf('crios') > -1;
+const CSS_COLUMNS_SUPPORTED = typeof document.body.style.columns !== 'undefined';
 
 export default class Gallery extends Component {
 
 	preSetup() {
-		this.partitionItems(true);
+		if(CSS_COLUMNS_SUPPORTED) {
+			// todo classList.add ?
+			this.baseEl && this.baseEl.className.indexOf('columns') === -1 && (this.baseEl.className = this.baseEl.className + ' columns');
+		}
+		else {
+			this.partitionItems(true);
+		}
+		this.lazyLoadImages();
 	}
 
 	constructor(props) {
@@ -56,6 +64,141 @@ export default class Gallery extends Component {
 		this.preSetup();
 	}
 
+	// Handle history
+	onPop() {
+
+		let changedIndex = BookMarker.get();
+		if (changedIndex !== this.state.currentIndex) {
+			if (changedIndex === -1)
+				this.onModalClose();
+			else
+				this.setState({currentIndex: changedIndex});
+		}
+	}
+
+	// Handle resize (portrait/landscape switch)
+	onResize() {
+
+		if(CSS_COLUMNS_SUPPORTED) {
+			// we don't need to partition through javascript. yay!
+			return;
+		}
+
+		// chrome toggles address bar now and then and triggers resize often.
+		if ( Math.abs( parseInt(this._lastHeight || 0) - (window.innerHeight / 4) ) < 100 )
+			return;
+
+		this._lastHeight = window.innerHeight / 4;
+		this.partitionItems();
+	}
+
+	// Handle network change
+	onNetworkChange() {
+		this.setState({online: window.navigator.onLine});
+	}
+
+	// Handle image click
+	onItemClick(event, index) {
+		this._lastScrollPos = window.scrollY;
+		this._lastActive = document.activeElement;
+
+		this.setState({currentIndex: index}, () => {
+			animateFLIP(event.target, this.modal.getCurrentModalItem());
+
+			// delay chrome address bar popping up immediately and creating ugly transition effect
+			if( DELAY_MODAL && this._lastScrollPos > 0 )
+				setTimeout(() => BookMarker.set(this.state.currentIndex + 1), 500);
+			else
+				BookMarker.set(this.state.currentIndex + 1);
+
+		});
+	}
+
+	render() {
+
+		let {items, currentIndex, online} = this.state;
+
+		// pagination items for modal
+		let pages = [], current = 0;
+
+		if(items.length) {
+			if (currentIndex > 0) {
+				pages.push(items[currentIndex - 1]);
+				current = 1;
+			}
+			if(currentIndex > -1)
+				pages.push(items[currentIndex]);
+			if (currentIndex < items.length - 1) {
+				pages.push(items[currentIndex + 1]);
+			}
+		}
+
+		return (
+			<main className={`container ${online === false ? 'container--offline' : ''}`} role={'main'} aria-live={'polite'}>
+				<h1 className={'heading'}>{'Gallery'}</h1>
+				{
+					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery'}>
+						{
+							items.map((item, index) => {
+								return (
+									<li key={index} className={`gallery__item`} onClick={(event) => this.onItemClick(event, index)}>
+										<a className={'gallery__item--link'} aria-label={'selected ' + item['title']} href="javascript:void(0)"><img className={'gallery__item__img'} src={FALLBACK_IMAGE} data-src={item['src']} title={item['title']} alt={item['title']} style={CSS_COLUMNS_SUPPORTED ? {} : {width: item['width'], height: item['height']}}/></a>
+									</li>
+								);
+							})
+						}
+					</ul> : <Loader/>
+				}
+				<Modal ref={(el) => {this.modal = el}}
+					   show={currentIndex > -1}
+					   pages={pages}
+					   pageIndex={current}
+					   onModalSwipe={this.onModalSwipe}
+					   onClose={this.onModalClose}/>
+			</main>
+		);
+	}
+
+	// Handle when modal is closed
+	onModalClose() {
+
+		let lastIndex = this.state.currentIndex;
+
+		// scroll to corresponding element
+		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
+			let currentElement = this.baseEl.childNodes[lastIndex];
+			let positionTop = this._swiped ? (currentElement.getBoundingClientRect()).top + window.scrollY : (this._lastScrollPos || 0);
+			this._swiped ? currentElement.focus() : this._lastActive && this._lastActive.focus();
+			window.scrollTo && window.scrollTo(0, positionTop);
+			this._swiped = false;
+		}
+
+		// reverse the animation
+		animateFLIP(this.modal.getCurrentModalItem(), this.baseEl.childNodes[lastIndex]);
+
+		// clear state
+		this.setState({currentIndex: -1}, () => {
+			BookMarker.clear();
+		});
+
+	}
+
+	// Handle when items are swiped
+	onModalSwipe(isLeft) {
+
+		this._swiped = true;
+
+		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
+			BookMarker.set(this.state.currentIndex + 1, true);
+		});
+	}
+
+	// Lazy load images (Intersection observer)
+	lazyLoadImages() {
+		lazyLoader(document.querySelectorAll('.gallery__item__img:not(.gallery__item__img--loaded)'), {imageLoadedClass: 'gallery__item__img--loaded', errorImageSrc: FALLBACK_IMAGE});
+	}
+
+	// Incase of CSS columns not supported, partition items manually using javascript
 	partitionItems(firstLoad = false, idealWidth = window.innerWidth, idealHeight = parseInt(window.innerHeight / 4)) {
 
 		if(this.state.items.length < 1)
@@ -110,126 +253,13 @@ export default class Gallery extends Component {
 			this.setState({items: imageObjectList}, () => {
 				if(firstLoad)
 					window.requestAnimationFrame(() => this.partitionItems());
+				else
+					this._origList = [];
+				this.lazyLoadImages();
 			});
 
 		});
 
-	}
-
-	onPop() {
-
-		let changedIndex = BookMarker.get();
-		if (changedIndex !== this.state.currentIndex) {
-			if (changedIndex === -1)
-				this.onModalClose();
-			else
-				this.setState({currentIndex: changedIndex});
-		}
-	}
-
-	onResize() {
-		// chrome toggles address bar now and then and triggers resize often.
-		if ( Math.abs( parseInt(this._lastHeight || 0) - (window.innerHeight / 4) ) < 100 )
-			return;
-		this._lastHeight = window.innerHeight / 4;
-		this.partitionItems();
-	}
-
-	listItemClick(event, index) {
-		this._lastScrollPos = window.scrollY;
-		this._lastActive = document.activeElement;
-
-		this.setState({currentIndex: index}, () => {
-			animateFLIP(event.target, this.modal.getCurrentModalItem());
-
-			// fix chrome address bar popping up immediately
-			if( DELAY_MODAL && this._lastScrollPos > 0 )
-				setTimeout(() => BookMarker.set(this.state.currentIndex + 1), 500);
-			else
-				BookMarker.set(this.state.currentIndex + 1);
-
-		});
-	}
-
-	onNetworkChange() {
-		this.setState({online: window.navigator.onLine});
-	}
-
-	render() {
-
-		let {items, currentIndex, online} = this.state;
-
-		// pagination items for modal
-		let pages = [], current = 0;
-
-		if(items.length) {
-			if (currentIndex > 0) {
-				pages.push(items[currentIndex - 1]);
-				current = 1;
-			}
-			if(currentIndex > -1)
-				pages.push(items[currentIndex]);
-			if (currentIndex < items.length - 1) {
-				pages.push(items[currentIndex + 1]);
-			}
-		}
-
-		return (
-			<main className={`container ${online === false ? 'container--offline' : ''}`} role={'main'} aria-live={'polite'}>
-				<h1 className={'heading'}>{'Gallery'}</h1>
-				{
-					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery'}>
-						{
-							items.map((item, index) => {
-								return (
-									<li key={index} className={`gallery__item ${!item['width'] ? 'gallery__item--loading' : ''}`} onClick={(event) => this.listItemClick(event, index)}>
-										<a className={'gallery__item--link'} aria-label={'selected ' + item['title']} href="javascript:void(0)"><img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/></a>
-									</li>
-								);
-							})
-						}
-					</ul> : <Loader/>
-				}
-				<Modal ref={(el) => {this.modal = el}}
-					   show={currentIndex > -1}
-					   pages={pages}
-					   pageIndex={current}
-					   onModalSwipe={this.onModalSwipe}
-					   onClose={this.onModalClose}/>
-			</main>
-		);
-	}
-
-	onModalClose() {
-
-		let lastIndex = this.state.currentIndex;
-
-		// scroll to corresponding element
-		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
-			let currentElement = this.baseEl.childNodes[lastIndex];
-			let positionTop = this._swiped ? (currentElement.getBoundingClientRect()).top + window.scrollY : (this._lastScrollPos || 0);
-			this._swiped ? currentElement.focus() : this._lastActive && this._lastActive.focus();
-			window.scrollTo && window.scrollTo(0, positionTop);
-			this._swiped = false;
-		}
-
-		// reverse the animation
-		animateFLIP(this.modal.getCurrentModalItem(), this.baseEl.childNodes[lastIndex]);
-
-		// clear state
-		this.setState({currentIndex: -1}, () => {
-			BookMarker.clear();
-		});
-
-	}
-
-	onModalSwipe(isLeft) {
-
-		this._swiped = true;
-
-		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
-			BookMarker.set(this.state.currentIndex + 1, true);
-		});
 	}
 
 }
