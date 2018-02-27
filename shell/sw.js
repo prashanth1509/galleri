@@ -6,7 +6,7 @@ const PRECACHE_URLS = [
 	'index.html',
 	'./',
 	'./#',
-	'bundle.3e0dd.js',
+	'bundle.c902a.js',
 	'style.d0d1d.css',
 	'assets/close.png',
 	'assets/comment.png',
