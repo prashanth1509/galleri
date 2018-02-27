@@ -1,5 +1,8 @@
 import {Component} from 'preact';
 
+/**
+ * Loader component
+ */
 export default class Loader extends Component {
 	render() {
 		return (

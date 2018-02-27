@@ -9,6 +9,11 @@ const FALLBACK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAA
 const DELAY_MODAL = window.navigator.userAgent.toLowerCase().indexOf('crios') > -1;
 const CSS_COLUMNS_SUPPORTED = typeof document.body.style.columns !== 'undefined';
 
+/**
+ * Gallery component
+ * @param items {array} - array of image objects (src, title)
+ * @param currentIndex {number} - current selection
+ */
 export default class Gallery extends Component {
 
 	preSetup() {
@@ -97,23 +102,6 @@ export default class Gallery extends Component {
 		this.setState({online: window.navigator.onLine});
 	}
 
-	// Handle image click
-	onItemClick(event, index) {
-		this._lastScrollPos = window.scrollY;
-		this._lastActive = document.activeElement;
-
-		this.setState({currentIndex: index}, () => {
-			animateFLIP(event.target, this.modal.getCurrentModalItem());
-
-			// delay chrome address bar popping up immediately and creating ugly transition effect
-			if( DELAY_MODAL && this._lastScrollPos > 0 )
-				setTimeout(() => BookMarker.set(this.state.currentIndex + 1), 500);
-			else
-				BookMarker.set(this.state.currentIndex + 1);
-
-		});
-	}
-
 	render() {
 
 		let {items, currentIndex, online} = this.state;
@@ -159,6 +147,27 @@ export default class Gallery extends Component {
 		);
 	}
 
+	// Handle click
+	onItemClick(event, index) {
+
+		// store current scrolls and active elements
+		this._lastScrollPos = window.scrollY;
+		this._lastActive = document.activeElement;
+
+		this.setState({currentIndex: index}, () => {
+
+			// animate current image into modal
+			animateFLIP(event.target, this.modal.getCurrentModalItem());
+
+			// delay chrome address bar popping up immediately and creating ugly transition effect
+			if( DELAY_MODAL && this._lastScrollPos > 0 )
+				setTimeout(() => BookMarker.set(this.state.currentIndex + 1), 500);
+			else
+				BookMarker.set(this.state.currentIndex + 1);
+
+		});
+	}
+
 	// Handle when modal is closed
 	onModalClose() {
 
@@ -176,7 +185,6 @@ export default class Gallery extends Component {
 		// reverse the animation
 		animateFLIP(this.modal.getCurrentModalItem(), this.baseEl.childNodes[lastIndex]);
 
-		// clear state
 		this.setState({currentIndex: -1}, () => {
 			BookMarker.clear();
 		});
@@ -198,13 +206,14 @@ export default class Gallery extends Component {
 		lazyLoader(document.querySelectorAll('.gallery__item__img:not(.gallery__item__img--loaded)'), {imageLoadedClass: 'gallery__item__img--loaded', errorImageSrc: FALLBACK_IMAGE});
 	}
 
-	// Incase of CSS columns not supported, partition items manually using javascript
+	// If CSS columns are not supported, partition items manually using javascript
 	partitionItems(firstLoad = false, idealWidth = window.innerWidth, idealHeight = parseInt(window.innerHeight / 4)) {
 
 		if(this.state.items.length < 1)
 			return;
 
 		let currentItems = (this._origList || this.state.items);
+		// yuck, but quick
 		this._origList = JSON.parse(JSON.stringify(currentItems));
 		currentItems = firstLoad ? currentItems.slice(0, 8) : currentItems;
 

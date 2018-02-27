@@ -1,10 +1,18 @@
 import {Component} from 'preact';
-import {getTranslate3dText,getZoomFactor} from './Utils';
+import {getTranslate3dText, getZoomFactor} from './Utils';
 
 const SWIPE_THRESHOLD_PERCENT = 40;
 const TRANSITION_INTERVAL_MS = 200;
 const KEYS = {LEFT: 37, RIGHT: 39, ESC: 27, TAB: 9};
 
+/**
+ * Modal component (Detail view of images)
+ * @param pages {array} - array of image objects (src, title)
+ * @param pageIndex {number} - current selection
+ * @param show {boolean} - show/hide
+ * @param onModalSwipe {function} - callback on modal item swipe
+ * @param onClose {function} - callback on modal close
+ */
 export default class Modal extends Component {
 
 	constructor(props) {
@@ -13,17 +21,14 @@ export default class Modal extends Component {
 		if (!props.onClose)
 			throw new Error('onClose is required!');
 
-		// swipe handlers
 		this.onTouchStart = this.onTouchStart.bind(this);
 		this.onTouchMove = this.onTouchMove.bind(this);
 		this.onTouchEnd = this.onTouchEnd.bind(this);
 
-		// swipes trackers
 		this.startX = 0;
 		this.currentX = 0;
 		this.diff = 0;
 
-		// keyboard handlers
 		this.onKeyDown = this.onKeyDown.bind(this);
 
 		this.state = {
@@ -38,6 +43,7 @@ export default class Modal extends Component {
 		}
 	}
 
+	// Handle touch start, setup trackers
 	onTouchStart(event) {
 
 		this.startX = event.touches[0].clientX;
@@ -45,6 +51,7 @@ export default class Modal extends Component {
 		this.diff = 0;
 	}
 
+	// Handle touch move and transform the element accordingly
 	onTouchMove(event) {
 
 		if(event.touches.length > 1 || getZoomFactor() > 1) {
@@ -69,6 +76,7 @@ export default class Modal extends Component {
 		});
 	}
 
+	// Handle touch end, decide on partial movements
 	onTouchEnd(event) {
 
 		event.preventDefault();
@@ -104,10 +112,10 @@ export default class Modal extends Component {
 
 	}
 
-
+	// Handle keyboard (mobile keyboard?) events and support tabbing
 	onKeyDown(event) {
 
-		let {pages, pageIndex} = this.props;
+		let {pages, pageIndex, onClose} = this.props;
 		let maxWidth = this.baseEl.offsetWidth / pages.length;
 
 		switch (event.keyCode) {
@@ -139,26 +147,9 @@ export default class Modal extends Component {
 				break;
 			case KEYS.ESC:
 				this._tipsEl && this._tipsEl.hideTips();
-				this.props.onClose();
+				onClose();
 				break;
 		}
-
-	}
-
-	// create a transition effect
-	createTransition(to, onFinish) {
-
-		window.requestAnimationFrame(() => {
-			this.baseEl.style.transition = `transform ${TRANSITION_INTERVAL_MS / 1000}s ease-out`;
-			this.baseEl.style.transform = getTranslate3dText(to);
-
-			// disable transition after animation (ideally animation on finish)
-			window.setTimeout(() => {
-				this.baseEl.style.transition = 'none';
-				onFinish && onFinish();
-			}, TRANSITION_INTERVAL_MS);
-
-		});
 
 	}
 
@@ -193,12 +184,29 @@ export default class Modal extends Component {
 		);
 	}
 
+	// create a transition effect from one slide to other
+	createTransition(to, onFinish) {
+
+		window.requestAnimationFrame(() => {
+			this.baseEl.style.transition = `transform ${TRANSITION_INTERVAL_MS / 1000}s ease-out`;
+			this.baseEl.style.transform = getTranslate3dText(to);
+
+			// disable transition after animation (ideally animation on finish)
+			window.setTimeout(() => {
+				this.baseEl.style.transition = 'none';
+				onFinish && onFinish();
+			}, TRANSITION_INTERVAL_MS);
+
+		});
+
+	}
+
 	// returns current visible item in the modal
 	getCurrentModalItem() {
 		return this.currentItem;
 	}
 
-	// place focus on modal (first focusable)
+	// place focus on modal
 	focus() {
 		this._firstCtrl && this._firstCtrl.focus();
 	}
@@ -224,6 +232,9 @@ export default class Modal extends Component {
 
 }
 
+/**
+ * Tips component (UI walkthrough)
+ */
 class Tips extends Component {
 	constructor(props) {
 		super(props);
