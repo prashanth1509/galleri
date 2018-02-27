@@ -144,9 +144,9 @@ export default class Gallery extends Component {
 
 			// fix chrome address bar popping up immediately
 			if( DELAY_MODAL && this._lastScrollPos > 0 )
-				setTimeout(() => BookMarker.set(this.state.currentIndex), 500);
+				setTimeout(() => BookMarker.set(this.state.currentIndex + 1), 500);
 			else
-				BookMarker.set(this.state.currentIndex);
+				BookMarker.set(this.state.currentIndex + 1);
 
 		});
 	}
@@ -228,7 +228,7 @@ export default class Gallery extends Component {
 		this._swiped = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
-			BookMarker.set(this.state.currentIndex, true);
+			BookMarker.set(this.state.currentIndex + 1, true);
 		});
 	}
 

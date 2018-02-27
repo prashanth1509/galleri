@@ -65,7 +65,7 @@ const BookMarker = {
 		}
 	},
 	clear() {
-		this.set("/", true);
+		this.set(undefined, true);
 	},
 	subscribe(fn) {
 		if(this.historySupported)

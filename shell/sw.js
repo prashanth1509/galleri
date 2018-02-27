@@ -5,6 +5,7 @@ const RUNTIME = 'runtime';
 const PRECACHE_URLS = [
 	'index.html',
 	'./',
+	'./?q=',
 	'bundle.6c060.js',
 	'style.2835c.css',
 	'assets/close.png',
