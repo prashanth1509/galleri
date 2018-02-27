@@ -264,10 +264,10 @@ class Tips extends Component {
 		return (
 			<div className={'tips'}>
 				<ul>
-					<li>{'TAP on top-left to "close"'}</li>
-					<li className={'tips--center'}>{'SWIPE to "switch" images'}</li>
+					<li>{'TAP on X-mark to "close"'}</li>
+					<li className={'tips--center'}>{'SWIPE/SHAKE to "change" images'}</li>
 					<li className={'tips--center'}>{'TAP on the image to "toggle" controls'}</li>
-					<li><button className={'tips--close'} onClick={this.hideTips}>{'GOT IT'}</button></li>
+					<li><button className={'tips--close'} onClick={this.hideTips}>{'CLOSE'}</button></li>
 				</ul>
 			</div>
 		);
