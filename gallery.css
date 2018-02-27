@@ -114,6 +114,7 @@
 	align-items: center;
 	height: 90vh;
 	padding-bottom: 30px;
+	will-change: transform;
 }
 
 .content__img__wrapper {

@@ -1,24 +1,11 @@
 import {Component} from 'preact';
 import {getTranslate3dText,getZoomFactor} from './Utils';
-import Shake from './shake';
 
 const SWIPE_THRESHOLD_PERCENT = 40;
 const TRANSITION_INTERVAL_MS = 200;
 const KEYS = {LEFT: 37, RIGHT: 39, ESC: 27, TAB: 9};
-const ENABLE_SHAKE = !!navigator.platform.match(/iPhone|iPod|iPad/);
 
 export default class Modal extends Component {
-
-	enableShakeDetection() {
-		if(!ENABLE_SHAKE)
-			return;
-
-		this._shakeListener = new Shake({
-			threshold: 5,
-			timeout: 500
-		});
-		this._shakeListener.start();
-	}
 
 	constructor(props) {
 		super(props);
@@ -43,10 +30,6 @@ export default class Modal extends Component {
 			showControl: true
 		};
 
-		//shake handlers
-		this.enableShakeDetection();
-		this.onShake = this.onShake.bind(this);
-
 	}
 
 	componentDidUpdate() {
@@ -55,22 +38,11 @@ export default class Modal extends Component {
 		}
 	}
 
-	componentWillMount() {
-		window.addEventListener('shake', this.onShake, false);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('shake', this.onShake, false);
-		this._shakeListener.stop();
-	}
-
 	onTouchStart(event) {
 
 		this.startX = event.touches[0].clientX;
 		this.startTime = +(new Date());
 		this.diff = 0;
-		this.baseEl.style['willChange'] = 'transform';
-
 	}
 
 	onTouchMove(event) {
@@ -179,13 +151,15 @@ export default class Modal extends Component {
 		window.requestAnimationFrame(() => {
 			this.baseEl.style.transition = `transform ${TRANSITION_INTERVAL_MS / 1000}s ease-out`;
 			this.baseEl.style.transform = getTranslate3dText(to);
+
+			// disable transition after animation (ideally animation on finish)
+			window.setTimeout(() => {
+				this.baseEl.style.transition = 'none';
+				onFinish && onFinish();
+			}, TRANSITION_INTERVAL_MS);
+
 		});
 
-		window.setTimeout(() => {
-			this.baseEl.style.transition = 'none';
-			this.baseEl.style['willChange'] = 'auto';
-			onFinish && onFinish();
-		}, TRANSITION_INTERVAL_MS);
 	}
 
 	render() {
@@ -238,25 +212,14 @@ export default class Modal extends Component {
 		}
 
 		let offset = 0;
-		let baseWidth = document.body.offsetWidth;
+		let baseWidth = (this._cachedWidth || document.body.offsetWidth);
+		this._cachedWidth = baseWidth;
 
 		for (let i = 0; i < pageIndex; i++)
-			offset -= baseWidth;
+			offset-= baseWidth;
 
 		this.currentX = offset;
 		return this.currentX;
-	}
-
-	onShake() {
-		let {show, pageIndex, pages, onModalSwipe} = this.props;
-
-		// todo handle direction of shake
-		if(show && pageIndex < pages.length - 1) {
-			this.currentX = this.currentX - (this.baseEl.offsetWidth / pages.length);
-			this.createTransition(this.currentX, () => {
-				onModalSwipe && onModalSwipe(false);
-			});
-		}
 	}
 
 }
@@ -274,8 +237,8 @@ class Tips extends Component {
 		return (
 			<div className={'tips'}>
 				<ul>
-					<li>{'TAP on top-left edge to "close" slide'}</li>
-					<li className={'tips--center'}>{`SWIPE ${ENABLE_SHAKE ? '\\ SHAKE' : ''} to "change" images`}</li>
+					<li>{'TAP on top-left edge to "go back" to the list'}</li>
+					<li className={'tips--center'}>{'SWIPE to "change" images'}</li>
 					<li className={'tips--center'}>{'TAP on the image to "toggle" controls'}</li>
 					<li><button tabIndex="0" aria-label={'close tips'} className={'tips--close'} onClick={this.hideTips}>{'CLOSE'}</button></li>
 				</ul>
