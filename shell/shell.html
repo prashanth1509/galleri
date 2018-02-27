@@ -22,7 +22,7 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-<div class="container"><header class="header"><h2>Gallery</h2> <noscript><h3>Please enable javascript to enjoy the gallery!</h3></noscript> </header><ul class="gallery"><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li></ul></div>
+<main class="container" role="main"><h1 class="heading">Gallery</h1> <noscript><h3>Please enable javascript to enjoy the gallery!</h3></noscript> <ul class="gallery"><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li><li class="gallery__item gallery__item--loading"></li></ul></main>
 <script defer src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"></script>
 <script>window.fetch||document.write('<script src="<%= htmlWebpackPlugin.files.chunks["polyfills"].entry %>"><\/script>')</script>
 </body>

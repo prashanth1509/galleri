@@ -175,15 +175,15 @@ export default class Gallery extends Component {
 		}
 
 		return (
-			<main className={`container ${online === false ? 'container--offline' : ''}`}>
-				<header className={'header'}><h2>{'Gallery'}</h2></header>
+			<main className={`container ${online === false ? 'container--offline' : ''}`} role={'main'}>
+				<h1 className={'heading'}>{'Gallery'}</h1>
 				{
 					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery'}>
 						{
 							items.map((item, index) => {
 								return (
-									<li tabIndex={0} key={index} className={`gallery__item ${!item['width'] && 'gallery__item--loading'}`} onClick={(event) => this.listItemClick(event, index)}>
-										<img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/>
+									<li key={index} className={`gallery__item ${!item['width'] && 'gallery__item--loading'}`} onClick={(event) => this.listItemClick(event, index)}>
+										<a href="javascript:void(0)"><img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/></a>
 									</li>
 								);
 							})
