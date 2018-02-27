@@ -63,6 +63,7 @@ export default class Modal extends Component {
 	onTouchStart(event) {
 
 		this.startX = event.touches[0].clientX;
+		this.startTime = +(new Date());
 		this.diff = 0;
 		this.baseEl.style['willChange'] = 'transform';
 
@@ -97,7 +98,19 @@ export default class Modal extends Component {
 		event.preventDefault();
 
 		let maxWidth = this.baseEl.offsetWidth / Math.max(this.props.pages.length, 1);
-		let shouldMove = Math.abs((this.diff / maxWidth) * 100) > SWIPE_THRESHOLD_PERCENT;
+		let distanceMovedPercent = Math.abs((this.diff / maxWidth) * 100);
+		let elapsedTime = +new Date() - this.startTime;
+
+		// if user had moved past a given threshold
+		let shouldMove = distanceMovedPercent > SWIPE_THRESHOLD_PERCENT;
+
+		console.log(distanceMovedPercent, elapsedTime);
+
+		// or if user is swiping too fast.
+		if(distanceMovedPercent > 10 && elapsedTime < 120 ) {
+			shouldMove = true;
+		}
+
 		let isFingerDirectionLeft = this.diff < 0;
 
 		if (shouldMove) {
