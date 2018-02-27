@@ -137,6 +137,7 @@ export default class Gallery extends Component {
 
 	listItemClick(event, index) {
 		this._lastScrollPos = window.scrollY;
+		this._lastActive = document.activeElement;
 
 		this.setState({currentIndex: index}, () => {
 			animateFLIP(event.target, this.modal.getCurrentModalItem());
@@ -207,7 +208,7 @@ export default class Gallery extends Component {
 		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
 			let positionTop = this._swiped ? (currentElement.getBoundingClientRect()).top + window.scrollY : (this._lastScrollPos || 0);
-			currentElement.focus();
+			this._swiped ? currentElement.focus() : this._lastActive && this._lastActive.focus();
 			window.scrollTo && window.scrollTo(0, positionTop);
 			this._swiped = false;
 		}
