@@ -175,7 +175,7 @@ export default class Gallery extends Component {
 		}
 
 		return (
-			<main className={`container ${online === false ? 'container--offline' : ''}`} role={'main'}>
+			<main className={`container ${online === false ? 'container--offline' : ''}`} role={'main'} aria-live={'polite'}>
 				<h1 className={'heading'}>{'Gallery'}</h1>
 				{
 					items.length ? <ul ref={(el) => {this.baseEl = el}} className={'gallery'}>
