@@ -46,14 +46,43 @@ function addPolyfills() {
 }
 
 const BookMarker = {
+	historySupported: !!(window.history && window.history.pushState),
 	get(fallback = -1) {
+		if(this.historySupported) {
+			if(window.location.pathname) {
+				return parseInt(window.location.pathname.slice(1)) || fallback;
+			}
+			else {
+				return parseInt(window.location.href.split("/").pop()) || fallback;
+			}
+		}
 		return parseInt(window.location.hash.slice(1) || fallback);
 	},
-	set(value = "") {
-		window.location.hash = value;
+	set(value = "", replace = false) {
+		if(this.historySupported) {
+			if(replace)
+				history.replaceState(null, null, value);
+			else
+				history.pushState(null, null, value);
+		}
+		else {
+			window.location.hash = value;
+		}
 	},
 	clear() {
-		this.set();
+		this.set("/", true);
+	},
+	subscribe(fn) {
+		if(this.historySupported)
+			window.addEventListener('popstate', fn);
+		else
+			window.addEventListener('hashchange', fn);
+	},
+	unsubscribe(fn) {
+		if(this.historySupported)
+			window.removeEventListener('popstate', fn);
+		else
+			window.removeEventListener('hashchange', fn);
 	}
 };
 

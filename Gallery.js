@@ -25,7 +25,7 @@ export default class Gallery extends Component {
 
 		this.onModalClose = this.onModalClose.bind(this);
 		this.onModalSwipe = this.onModalSwipe.bind(this);
-		this.onHashChange = this.onHashChange.bind(this);
+		this.onPop = this.onPop.bind(this);
 		this.onNetworkChange = this.onNetworkChange.bind(this);
 		this.onResize = this.onResize.bind(this);
 	}
@@ -39,14 +39,14 @@ export default class Gallery extends Component {
 	}
 
 	componentWillMount() {
-		window.addEventListener('hashchange', this.onHashChange);
+		BookMarker.subscribe(this.onPop);
 		window.addEventListener('resize', this.onResize);
 		window.addEventListener('online',  this.onNetworkChange);
 		window.addEventListener('offline', this.onNetworkChange);
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('hashchange', this.onHashChange);
+		BookMarker.unsubscribe(this.onPop);
 		window.removeEventListener('resize', this.onResize);
 		window.removeEventListener('online',  this.onNetworkChange);
 		window.removeEventListener('offline', this.onNetworkChange);
@@ -116,7 +116,7 @@ export default class Gallery extends Component {
 
 	}
 
-	onHashChange() {
+	onPop() {
 
 		let changedIndex = BookMarker.get();
 		if (changedIndex !== this.state.currentIndex) {
@@ -228,7 +228,7 @@ export default class Gallery extends Component {
 		this._swiped = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
-			BookMarker.set(this.state.currentIndex);
+			BookMarker.set(this.state.currentIndex, true);
 		});
 	}
 
