@@ -5,10 +5,14 @@ import Shake from './shake';
 const SWIPE_THRESHOLD_PERCENT = 40;
 const TRANSITION_INTERVAL_MS = 200;
 const KEYS = {LEFT: 37, RIGHT: 39, ESC: 27, TAB: 9};
+const ENABLE_SHAKE = !!navigator.platform.match(/iPhone|iPod|iPad/);
 
 export default class Modal extends Component {
 
 	enableShakeDetection() {
+		if(!ENABLE_SHAKE)
+			return;
+
 		this._shakeListener = new Shake({
 			threshold: 5,
 			timeout: 500
@@ -271,7 +275,7 @@ class Tips extends Component {
 			<div className={'tips'}>
 				<ul>
 					<li>{'TAP on top-left edge to "close" slide'}</li>
-					<li className={'tips--center'}>{'SWIPE/SHAKE to "change" images'}</li>
+					<li className={'tips--center'}>{`SWIPE ${ENABLE_SHAKE ? '\\ SHAKE' : ''} to "change" images`}</li>
 					<li className={'tips--center'}>{'TAP on the image to "toggle" controls'}</li>
 					<li><button tabIndex="0" aria-label={'close tips'} className={'tips--close'} onClick={this.hideTips}>{'CLOSE'}</button></li>
 				</ul>
