@@ -104,7 +104,7 @@ export default class Modal extends Component {
 		// if user had moved past a given threshold
 		let shouldMove = distanceMovedPercent > SWIPE_THRESHOLD_PERCENT;
 
-		console.log(distanceMovedPercent, elapsedTime);
+		// console.log(distanceMovedPercent, elapsedTime);
 
 		// or if user is swiping too fast.
 		if(distanceMovedPercent > 10 && elapsedTime < 120 ) {
@@ -172,8 +172,11 @@ export default class Modal extends Component {
 	// create a transition effect
 	createTransition(to, onFinish) {
 
-		this.baseEl.style.transition = `transform ${TRANSITION_INTERVAL_MS / 1000}s ease-out`;
-		this.baseEl.style.transform = getTranslate3dText(to);
+		window.requestAnimationFrame(() => {
+			this.baseEl.style.transition = `transform ${TRANSITION_INTERVAL_MS / 1000}s ease-out`;
+			this.baseEl.style.transform = getTranslate3dText(to);
+		});
+
 		window.setTimeout(() => {
 			this.baseEl.style.transition = 'none';
 			this.baseEl.style['willChange'] = 'auto';
