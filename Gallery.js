@@ -206,7 +206,7 @@ export default class Gallery extends Component {
 		// scroll to corresponding element
 		if (this.baseEl && this.baseEl.childNodes[lastIndex]) {
 			let currentElement = this.baseEl.childNodes[lastIndex];
-			let positionTop = this._swiped ? (currentElement.getBoundingClientRect()).top + this.base.scrollTop : (this._lastScrollPos || 0);
+			let positionTop = this._swiped ? (currentElement.getBoundingClientRect()).top + window.scrollY : (this._lastScrollPos || 0);
 			currentElement.focus();
 			window.scrollTo && window.scrollTo(0, positionTop);
 			this._swiped = false;
