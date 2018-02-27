@@ -159,6 +159,7 @@ export default class Modal extends Component {
 				}
 				break;
 			case KEYS.ESC:
+				this._tipsEl && this._tipsEl.hideTips();
 				this.props.onClose();
 				break;
 		}
@@ -183,7 +184,6 @@ export default class Modal extends Component {
 
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
-				<Tips/>
 				<div className={'modal__control modal__control--top'} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a ref={(el) => {this._firstCtrl = el}} className={'control__item'} href='#'><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
 					<figcaption className={'control__item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
@@ -200,6 +200,7 @@ export default class Modal extends Component {
 						})}
 					</div>
 				</div>
+				<Tips ref={(el) => (this._tipsEl = el)}/>
 				<div className={'modal__control modal__control--bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a className={'control__item'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/comment.png'} alt="comment"/></a>
 					<a className={'control__item'} href='javascript:void(0)' ref={(el) => {this._lastCtrl = el}}><img className={'control__item--icon'} src={'assets/plus.png'} alt="plus"/></a>
@@ -261,9 +262,9 @@ class Tips extends Component {
 		if(this.state.show === false)
 			return null;
 		return (
-			<div className={'tips'}>
+			<div className={'tips'} tabIndex="0">
 				<ul>
-					<li>{'TAP on X-mark to "close"'}</li>
+					<li>{'TAP on top-left edge to "close" slide'}</li>
 					<li className={'tips--center'}>{'SWIPE/SHAKE to "change" images'}</li>
 					<li className={'tips--center'}>{'TAP on the image to "toggle" controls'}</li>
 					<li><button className={'tips--close'} onClick={this.hideTips}>{'CLOSE'}</button></li>
