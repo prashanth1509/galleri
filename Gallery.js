@@ -183,7 +183,7 @@ export default class Gallery extends Component {
 							items.map((item, index) => {
 								return (
 									<li key={index} className={`gallery__item ${!item['width'] ? 'gallery__item--loading' : ''}`} onClick={(event) => this.listItemClick(event, index)}>
-										<a aria-label={'selected ' + item['title']} href="javascript:void(0)"><img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/></a>
+										<a className={'gallery__item--link'} aria-label={'selected ' + item['title']} href="javascript:void(0)"><img src={item['width'] ? item['src'] : FALLBACK_IMAGE} title={item['title']} alt={item['title']} style={{width: item['width'], height: item['height']}}/></a>
 									</li>
 								);
 							})
