@@ -19,7 +19,7 @@ export default class App extends Component {
 	componentDidMount() {
 
 		// list of images to be loaded
-		fetch('/assets/images-v3.json').then((response) => response.json()).then((data) => {
+		fetch('/assets/images-v4.json').then((response) => response.json()).then((data) => {
 			this.setState({
 				list: data.images
 			});
