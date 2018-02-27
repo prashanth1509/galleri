@@ -183,7 +183,7 @@ export default class Modal extends Component {
 		let {pages, show, pageIndex} = this.props;
 
 		return (
-			<div className={'modal' + (show ? ' modal--visible' : '')} onKeyDown={this.onKeyDown}>
+			<div className={'modal' + (show ? ' modal--visible' : '')} onKeyDown={this.onKeyDown} role={'dialog'}>
 				<div className={'modal__control modal__control--top' + (this.state.showControl ? ' modal__control--visible' : '')}>
 					<a ref={(el) => {this._firstCtrl = el}} className={'control__item'} href='#' aria-label={'go back to list'}><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
 					<figcaption tabIndex="0" className={'control__item'} aria-label={'viewing ' + (pages[pageIndex] ? pages[pageIndex]['title'] : 'picture')}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
