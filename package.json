@@ -5,8 +5,10 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production/public && echo 'DONE FORGET TO UPDATE SERVICE WORKER'",
-    "deploy": "cd production && firebase deploy",
+    "build": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production-stable/public && echo 'DONE FORGET TO UPDATE SERVICE WORKER'",
+    "build-alt": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production-alternate/public && echo 'DONE FORGET TO UPDATE SERVICE WORKER'",
+    "deploy": "cd production-stable && firebase deploy",
+    "deploy-alt": "cd production-alternate && firebase deploy",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
     "lint": "eslint Gallery.js"
