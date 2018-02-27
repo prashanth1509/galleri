@@ -128,8 +128,6 @@ export default class Modal extends Component {
 
 	onKeyDown(event) {
 
-		event.preventDefault();
-
 		let {pages, pageIndex} = this.props;
 		let maxWidth = this.baseEl.offsetWidth / pages.length;
 
@@ -151,11 +149,12 @@ export default class Modal extends Component {
 				}
 				break;
 			case KEYS.TAB:
-				let firstFocusableElement = this.controlsEl.firstChild, lastFocusableElement = this.controlsEl.lastChild;
+				let firstFocusableElement = this._firstCtrl, lastFocusableElement = this._lastCtrl;
 				if (event.shiftKey && document.activeElement === firstFocusableElement) {
 					lastFocusableElement.focus();
 				}
 				else if (document.activeElement === lastFocusableElement) {
+					event.preventDefault();
 					firstFocusableElement.focus();
 				}
 				break;
@@ -185,8 +184,8 @@ export default class Modal extends Component {
 		return (
 			<div className={'modal'} style={{display: show ? 'block' : 'none'}} onKeyDown={this.onKeyDown}>
 				<Tips/>
-				<div className={'modal__control modal__control--top'} ref={(el) => {this.controlsEl = el}} style={{opacity: this.state.showControl ? 1 : 0}}>
-					<a className={'control__item'} href='#'><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
+				<div className={'modal__control modal__control--top'} style={{opacity: this.state.showControl ? 1 : 0}}>
+					<a ref={(el) => {this._firstCtrl = el}} className={'control__item'} href='#'><img className={'control__item--icon'} src={'assets/close.png'} alt="close"/></a>
 					<figcaption className={'control__item'}>{pages[pageIndex] && pages[pageIndex]['title']}</figcaption>
 				</div>
 				<div className={'modal__content'} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>
@@ -203,7 +202,7 @@ export default class Modal extends Component {
 				</div>
 				<div className={'modal__control modal__control--bottom'} style={{opacity: this.state.showControl ? 1 : 0}}>
 					<a className={'control__item'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/comment.png'} alt="comment"/></a>
-					<a className={'control__item'} href='javascript:void(0)'><img className={'control__item--icon'} src={'assets/plus.png'} alt="plus"/></a>
+					<a className={'control__item'} href='javascript:void(0)' ref={(el) => {this._lastCtrl = el}}><img className={'control__item--icon'} src={'assets/plus.png'} alt="plus"/></a>
 				</div>
 			</div>
 		);
@@ -216,7 +215,7 @@ export default class Modal extends Component {
 
 	// place focus on modal (first focusable)
 	focus() {
-		this.controlsEl && this.controlsEl.firstChild && this.controlsEl.firstChild.focus();
+		this._firstCtrl && this._firstCtrl.focus();
 	}
 
 	// get offset pixel based on pageIndex
