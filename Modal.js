@@ -194,7 +194,7 @@ export default class Modal extends Component {
 							let isCurrent = (index === pageIndex);
 							return (
 								<div className={'content__img__wrapper'}>
-									<img ref={(el) => {if (isCurrent) {this.currentItem = el;}}} src={item['src']} className={'content__img'}/>
+									<img ref={(el) => {if (isCurrent) {this.currentItem = el;}}} src={item ? item['src'] : ''} className={'content__img'}/>
 								</div>
 							);
 						})}
