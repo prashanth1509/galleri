@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production-stable/public && echo 'DONE FORGET TO UPDATE SERVICE WORKER'",
-    "deploy": "cd production-stable && firebase deploy",
+    "build": "preact build --service-worker --no-prerender --template=shell/shell.html --dest=production-v2/public && echo 'DONE FORGET TO UPDATE SERVICE WORKER'",
+    "deploy": "cd production-v2 && firebase deploy",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
     "lint": "eslint Gallery.js"

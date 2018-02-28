@@ -7,7 +7,7 @@ import {animateFLIP, BookMarker, lazyLoader, linearPartition} from './Utils';
 
 const FALLBACK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 const DELAY_MODAL = window.navigator.userAgent.toLowerCase().indexOf('crios') > -1;
-const CSS_COLUMNS_SUPPORTED = typeof document.body.style.columns !== 'undefined';
+const CSS_COLUMNS_SUPPORTED = false;
 
 /**
  * Gallery component
