@@ -262,8 +262,6 @@ export default class Gallery extends Component {
 			this.setState({items: imageObjectList}, () => {
 				if(firstLoad)
 					window.requestAnimationFrame(() => this.partitionItems());
-				else
-					this._origList = [];
 				this.lazyLoadImages();
 			});
 
