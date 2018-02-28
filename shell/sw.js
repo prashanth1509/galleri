@@ -1,4 +1,4 @@
-const PRECACHE = 'precache-v8';
+const PRECACHE = 'precache-v9';
 const RUNTIME = 'runtime';
 
 // A list of local resources we always want to be cached.
@@ -6,7 +6,7 @@ const PRECACHE_URLS = [
 	'index.html',
 	'./',
 	'./?q=',
-	'bundle.5c85f.js',
+	'bundle.165ea.js',
 	'style.7f1fa.css',
 	'assets/close.png',
 	'assets/arrow.png',
