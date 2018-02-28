@@ -135,6 +135,9 @@ function getZoomFactor() {
  */
 function animateFLIP(firstItem, lastItem) {
 
+	if(!firstItem || !lastItem)
+		return;
+
 	let firstRect = firstItem.getBoundingClientRect();
 	let lastRect = lastItem.getBoundingClientRect();
 
