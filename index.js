@@ -32,6 +32,6 @@ export default class App extends Component {
 	}
 
 	render() {
-		return <Gallery items={this.state.list} currentIndex={this.state.startIndex} enableKeyboard={true}/>;
+		return <Gallery items={this.state.list} currentIndex={this.state.startIndex - 1} enableKeyboard={true}/>;
 	}
 }
