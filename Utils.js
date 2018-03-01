@@ -54,10 +54,16 @@ function addPolyfills() {
 const BookMarker = {
 	historySupported: !!(window.history && window.history.pushState),
 	get(fallback = -1) {
+		let query;
 		if(this.historySupported) {
-			return parseInt(window.location.href.split("id=").pop()) || fallback;
+			query = window.location.href.split("id=").pop();
 		}
-		return parseInt(window.location.hash.slice(1) || fallback);
+		else {
+			query = window.location.hash.slice(1);
+		}
+		if(query!=='')
+			query = parseInt(query);
+		return query > -1 ? query : fallback;
 	},
 	set(value = "", replace = false) {
 		if(this.historySupported) {

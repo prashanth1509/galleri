@@ -161,9 +161,9 @@ export default class Gallery extends Component {
 
 			// delay chrome address bar popping up immediately and creating ugly transition effect
 			if( DELAY_MODAL && this._lastScrollPos > 0 )
-				setTimeout(() => BookMarker.set(this.state.currentIndex + 1), 500);
+				setTimeout(() => BookMarker.set(this.state.currentIndex), 500);
 			else
-				BookMarker.set(this.state.currentIndex + 1);
+				BookMarker.set(this.state.currentIndex);
 
 		});
 	}
@@ -197,7 +197,7 @@ export default class Gallery extends Component {
 		this._swiped = true;
 
 		this.setState((currentState) => ({currentIndex: currentState.currentIndex + (isLeft ? -1 : 1)}), () => {
-			BookMarker.set(this.state.currentIndex + 1, true);
+			BookMarker.set(this.state.currentIndex, true);
 		});
 	}
 
